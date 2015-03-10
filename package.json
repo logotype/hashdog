@@ -1,0 +1,23 @@
+{
+  "name": "hashdog",
+  "version": "0.0.1",
+  "description": "Break MD5 hashes using wordlists, password lists and string permutations",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logotype/hashdog.git"
+  },
+  "license": "MIT",
+  "main": "src",
+  "dependencies": {
+    "colors": "latest",
+    "mkdirp": "latest",
+    "tar": "latest"
+  },
+  "devDependencies": {
+    "del": "latest",
+    "gulp": "latest",
+    "gulp-babel": "latest",
+    "gulp-jshint": "latest",
+    "gulp-util": "latest"
+  }
+}
