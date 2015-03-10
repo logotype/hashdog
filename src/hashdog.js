@@ -1,4 +1,4 @@
-/*!
+/*
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
@@ -13,7 +13,11 @@ import {Util} from './util/Util';
 
 export class HashDog {
 
-    constructor() {
+    constructor(options) {
+
+        if(!options || !options.hash || !options.length) {
+            throw new Error('Missing options');
+        }
 
         let self = this,
             worker, refreshRate = 120,
@@ -21,8 +25,8 @@ export class HashDog {
             numCPUs = require('os').cpus().length;
 
         this.startDate = new Date();
-        this.match = '2655dd21148f2433763d313407d5d820'; //tr1z
-        this.fixedLength = 4; //tr1z.length
+        this.match = options.hash;
+        this.fixedLength = options.length;
         this.md5 = new MD5();
         this.workers = [];
         this.status = {
@@ -120,4 +124,4 @@ export class HashDog {
     }
 }
 
-let instance = new HashDog();
+export default HashDog;

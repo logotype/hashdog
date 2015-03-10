@@ -8,11 +8,11 @@ Quick start
 
 Clone the repo, `git clone git://github.com/logotype/hashdog.git`.
 
-Build and run an instance of the `Hashdog` class by running `io.js` in the CLI:
+Build and run an instance of the `Hashdog` class by running `hashdog-cli` in the CLI:
 
 ```javascript
 gulp
-iojs build/hashdog.js
+./build/hashdog-cli --md5 2655dd21148f2433763d313407d5d820 --length 4
 ```
 
 Example output:
