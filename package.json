@@ -19,5 +19,10 @@
     "gulp-babel": "latest",
     "gulp-jshint": "latest",
     "gulp-util": "latest"
-  }
+  },
+  "keywords": [
+    "md5",
+    "hashdog",
+    "bruteforce"
+  ]
 }
