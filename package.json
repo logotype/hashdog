@@ -17,13 +17,15 @@
   "devDependencies": {
     "del": "latest",
     "gulp": "latest",
+    "babel": "latest",
     "gulp-chmod": "latest",
     "gulp-babel": "latest",
+    "gulp-mocha": "latest",
     "gulp-jshint": "latest",
     "gulp-rename": "latest",
     "gulp-util": "latest",
     "mocha": "latest",
-    "mocha-traceur": "latest"
+    "gulp-load-plugins": "latest"
   },
   "keywords": [
     "md5",
@@ -31,6 +33,6 @@
     "bruteforce"
   ],
   "scripts": {
-    "test": "mocha --compilers js:mocha-traceur test/*.js"
+    "test": "mocha --compilers js:babel/register test/**/*.js"
   }
 }

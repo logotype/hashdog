@@ -10,17 +10,20 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     del = require('del'),
     chmod = require('gulp-chmod'),
-    rename = require("gulp-rename");
+    rename = require("gulp-rename"),
+    mocha = require('gulp-mocha'),
+    $ = require('gulp-load-plugins')();
 
 gulp.task('jshint', function () {
     return gulp.src('./src/**/*.js')
-        .pipe(jshint({'esnext': true}))
-        .pipe(jshint.reporter('default'));
+        .pipe($.jshint({'esnext': true}))
+        .pipe($.jshint.reporter('default'));
 });
 
 gulp.task('clean:build', function (cb) {
     return del(['build/**'], cb);
 });
+
 gulp.task('clean:cli', ['cli'], function (cb) {
     return del(['build/hashdog-cli.js'], cb);
 });
@@ -30,18 +33,27 @@ gulp.task('copy:data', ['clean:build'], function() {
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('babel', ['clean:build'], function() {
+gulp.task('transpile', ['clean:build'], function() {
     return gulp.src(['./src/**/*.js'])
-        .pipe(babel())
+        .pipe($.babel())
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('cli', ['babel'], function() {
-
+gulp.task('cli', ['transpile'], function() {
     return gulp.src('./build/hashdog-cli.js')
         .pipe(rename('hashdog-cli'))
         .pipe(chmod(755))
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('default', ['jshint', 'clean:build', 'copy:data', 'babel', 'cli', 'clean:cli']);
+gulp.task('test', ['clean:cli'], function () {
+    return gulp.src('./test/**/*.js', {read: false})
+        .pipe($.babel())
+        .pipe($.mocha({
+            recursive: true,
+            compilers: require('babel/register'),
+            reporter: 'spec'
+        }));
+});
+
+gulp.task('default', ['jshint', 'clean:build', 'copy:data', 'transpile', 'cli', 'clean:cli', 'test']);
