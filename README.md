@@ -3,6 +3,8 @@ Break MD5 hashes using wordlists, password lists and string permutations.
 
 Written in ECMAScript 6, and runs multiple forked processes for better performance. Using IPC calls in the cluster. In the initial version, three different strategies are used for finding the correct hash. The first method is a english dictionary, along with a few word variations. The second path is using common passwords, while the third strategy is a bruteforce approach. The approach in this case is standard sequential recursive string permutation.
 
+[![Build Status](https://travis-ci.org/logotype/hashdog.svg?branch=master)](https://travis-ci.org/logotype/hashdog) [![NPM Version](https://badge.fury.io/js/hashdog.svg)](http://badge.fury.io/js/hashdog)
+
 Quick start
 -----------
 
