@@ -43,7 +43,7 @@ export class Permutator extends BaseWorker {
         }
 
         if (n === 0) {
-            hash = this.md5.hash(this.string);
+            hash = MD5.hash(this.string);
             if (hash === this.match) {
                 this.foundMatch = true;
                 this.data.status = 'SUCCESS';

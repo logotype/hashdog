@@ -5,12 +5,9 @@
  * Copyright 2015 Victor Norgren
  * Released under the MIT license
  */
-import {MD5} from './../util/MD5';
-
 export class BaseWorker {
     constructor(options) {
         this.refreshRate = 500;
-        this.md5 = new MD5();
         this.match = options.match;
         this.string = '';
         this.lastDate = new Date();

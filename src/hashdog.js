@@ -6,7 +6,6 @@
  * Released under the MIT license
  */
 import {Permutator} from './workers/Permutator';
-import {MD5} from './util/MD5';
 import {Wordlist} from './workers/Wordlist';
 import {Passwords} from './workers/Passwords';
 import {Util} from './util/Util';
@@ -27,7 +26,6 @@ export class HashDog {
         this.startDate = new Date();
         this.match = options.hash;
         this.fixedLength = options.length;
-        this.md5 = new MD5();
         this.workers = [];
         this.status = {
             'wl': {},

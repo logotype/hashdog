@@ -39,8 +39,8 @@ export class Wordlist extends BaseWorker {
             currentString = wordArray[i];
             currentStringLeet = currentString.replace(/i/g, '1').replace(/o/g, '0').replace(/e/g, '3');
 
-            hash = this.md5.hash(currentString);
-            hashLeet = this.md5.hash(currentStringLeet);
+            hash = MD5.hash(currentString);
+            hashLeet = MD5.hash(currentStringLeet);
 
             if (this.match === hash || this.match === hashLeet) {
 

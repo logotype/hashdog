@@ -102,7 +102,7 @@ export class Passwords extends BaseWorker {
 
         for (i; i < this.passwordArray.length; i++) {
             currentString = this.passwordArray[i];
-            hash = this.md5.hash(currentString);
+            hash = MD5.hash(currentString);
             if (this.match === hash) {
                 this.data.status = 'SUCCESS';
                 this.data.success = true;

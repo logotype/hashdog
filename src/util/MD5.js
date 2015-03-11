@@ -7,15 +7,11 @@
  */
 export class MD5 {
 
-    constructor() {
-        this.hex_chr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
-    }
-
-    hash(string) {
+    static hash(string) {
         return this.hex(this.md51(string));
     }
 
-    md5cycle(x, k) {
+    static md5cycle(x, k) {
         let a = x[0],
             b = x[1],
             c = x[2],
@@ -95,28 +91,28 @@ export class MD5 {
         x[3] = this.add32(d, x[3]);
     }
 
-    cmn(q, a, b, x, s, t) {
+    static cmn(q, a, b, x, s, t) {
         a = this.add32(this.add32(a, q), this.add32(x, t));
         return this.add32((a << s) | (a >>> (32 - s)), b);
     }
 
-    ff(a, b, c, d, x, s, t) {
+    static ff(a, b, c, d, x, s, t) {
         return this.cmn((b & c) | ((~b) & d), a, b, x, s, t);
     }
 
-    gg(a, b, c, d, x, s, t) {
+    static gg(a, b, c, d, x, s, t) {
         return this.cmn((b & d) | (c & (~d)), a, b, x, s, t);
     }
 
-    hh(a, b, c, d, x, s, t) {
+    static hh(a, b, c, d, x, s, t) {
         return this.cmn(b ^ c ^ d, a, b, x, s, t);
     }
 
-    ii(a, b, c, d, x, s, t) {
+    static ii(a, b, c, d, x, s, t) {
         return this.cmn(c ^ (b | (~d)), a, b, x, s, t);
     }
 
-    md51(s) {
+    static md51(s) {
         let n = s.length,
             state = [1732584193, -271733879, -1732584194, 271733878],
             i = 64,
@@ -141,7 +137,7 @@ export class MD5 {
         return state;
     }
 
-    md5blk(s) {
+    static md5blk(s) {
         let md5blks = [],
             i = 0;
         for (i; i < 64; i += 4) {
@@ -150,16 +146,17 @@ export class MD5 {
         return md5blks;
     }
 
-    rhex(n) {
-        let s = '',
+    static rhex(n) {
+        let hex_chr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
+            s = '',
             j = 0;
         for (j; j < 4; j++) {
-            s += this.hex_chr[(n >> (j * 8 + 4)) & 0x0F] + this.hex_chr[(n >> (j * 8)) & 0x0F];
+            s += hex_chr[(n >> (j * 8 + 4)) & 0x0F] + hex_chr[(n >> (j * 8)) & 0x0F];
         }
         return s;
     }
 
-    hex(x) {
+    static hex(x) {
         let i = 0,
             length = x.length;
 
@@ -169,7 +166,7 @@ export class MD5 {
         return x.join('');
     }
 
-    add32(a, b) {
+    static add32(a, b) {
         return (a + b) & 0xFFFFFFFF;
     }
 }
