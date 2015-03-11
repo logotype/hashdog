@@ -21,11 +21,16 @@
     "gulp-babel": "latest",
     "gulp-jshint": "latest",
     "gulp-rename": "latest",
-    "gulp-util": "latest"
+    "gulp-util": "latest",
+    "mocha": "latest",
+    "mocha-traceur": "latest"
   },
   "keywords": [
     "md5",
     "hashdog",
     "bruteforce"
-  ]
+  ],
+  "scripts": {
+    "test": "mocha --compilers js:mocha-traceur test/*.js"
+  }
 }
