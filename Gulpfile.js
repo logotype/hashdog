@@ -48,7 +48,6 @@ gulp.task('cli', ['transpile'], function() {
 
 gulp.task('test', ['clean:cli'], function () {
     return gulp.src('./test/**/*.js', {read: false})
-        .pipe($.babel())
         .pipe($.mocha({
             recursive: true,
             compilers: require('babel/register'),
