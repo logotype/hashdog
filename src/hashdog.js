@@ -14,8 +14,8 @@ export class HashDog {
 
     constructor(options) {
 
-        if(!options || !options.hash || !options.length) {
-            throw new Error('Missing options');
+        if(!options || !options.hash) {
+            throw new Error('Missing hash!');
         }
 
         let self = this,
@@ -25,7 +25,8 @@ export class HashDog {
 
         this.startDate = new Date();
         this.match = options.hash;
-        this.fixedLength = options.length;
+        this.chars = options.chars || 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        this.fixedLength = options.length || 8;
         this.workers = [];
         this.status = {
             'wl': {},
@@ -65,7 +66,7 @@ export class HashDog {
                             self.passwords.initialize({length: this.fixedLength});
                             break;
                         case 3:
-                            self.permutator.initialize({length: this.fixedLength, chars:'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789'});
+                            self.permutator.initialize({length: this.fixedLength, chars:this.chars});
                             break;
                     }
                 }
