@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import {HashDog} from './hashdog';
 
+process.title = 'hashdog';
+
 var program = require('commander'),
     path = require('path'),
     pkg = require(path.join(__dirname, '../package.json')),

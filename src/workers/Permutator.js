@@ -17,6 +17,8 @@ export class Permutator extends BaseWorker {
         this.permutations = 0;
         this.foundMatch = false;
         this.lastPermutations = 0;
+        this.tryCompleteKeyspace = false;
+        this.options = {};
 
         this.data.name = '<Bruteforce> Permutations';
         this.data.thread = 'sp';
@@ -24,18 +26,49 @@ export class Permutator extends BaseWorker {
     }
 
     initialize(options) {
-        this.data.keysTotal = Math.pow(options.chars.length, options.length);
-        this.permute(options.length, options.chars);
+
+        this.options = options;
+
+        if(!this.options.length) {
+            this.options.length = 2;
+        }
+
+        // Reset data
+        this.permutations = 0;
+        this.foundMatch = false;
+        this.lastPermutations = 0;
+        this.string = '';
+        this.data.keyLength = this.options.length;
+
+        this.data.keysTotal = Math.pow(this.options.chars.length, this.options.length);
+        this.permute(this.options.length);
     }
 
-    permute(n, chars) {
+    permute(n) {
         let j, hash, currentDate, dateDiff, permDiff, percentage, rate;
 
         if (this.foundMatch) {
             return;
         }
 
-        if (!this.string || this.string.length === 0) {
+        if(parseInt(this.permutations) === parseInt(this.data.keysTotal) - 1) {
+           if(this.tryCompleteKeyspace) {
+               this.options.length++;
+               this.initialize(this.options);
+               return;
+           } else {
+               this.data.status = 'Unsuccessful';
+               this.data.success = false;
+               this.data.uptime = process.uptime().toFixed(2);
+               this.data.keysTried = this.permutations + 1;
+               this.data.percentage = 100;
+               this.data.string = '';
+               this.sendStatus();
+               process.exit(0);
+           }
+        }
+
+        if (this.string.length === 0) {
             this.string = '';
             for (j = 0; j < n; j++) {
                 this.string += ' ';
@@ -81,9 +114,9 @@ export class Permutator extends BaseWorker {
             }
 
         } else {
-            for (j = 0; j < chars.length; j++) {
-                this.string = Util.replaceCharAtIndex(this.string, n - 1, chars[j]);
-                this.permute(n - 1, chars);
+            for (j = 0; j < this.options.chars.length; j++) {
+                this.string = Util.replaceCharAtIndex(this.string, n - 1, this.options.chars[j]);
+                this.permute(n - 1);
             }
         }
     }

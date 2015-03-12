@@ -26,7 +26,7 @@ export class HashDog {
         this.startDate = new Date();
         this.match = options.hash;
         this.chars = options.chars || 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        this.fixedLength = options.length || 8;
+        this.fixedLength = options.length;
         this.workers = [];
         this.status = {
             'wl': {},
@@ -40,9 +40,9 @@ export class HashDog {
         if (cluster.isMaster) {
             for (let i = 0; i < numCPUs - 1; i++) {
                 worker = cluster.fork();
-                worker.on('message', (msg) => {
-                    if (msg.thread) {
-                        self.display(msg);
+                worker.on('message', (data) => {
+                    if (data.type === 'display') {
+                        self.display(data);
                     }
                 });
                 this.workers.push(worker);
@@ -66,6 +66,9 @@ export class HashDog {
                             self.passwords.initialize({length: this.fixedLength});
                             break;
                         case 3:
+                            if(!this.fixedLength) {
+                                self.permutator.tryCompleteKeyspace = true;
+                            }
                             self.permutator.initialize({length: this.fixedLength, chars:this.chars});
                             break;
                     }
@@ -74,7 +77,7 @@ export class HashDog {
         }
     }
 
-    display(msg) {
+    display(data) {
         let self = this,
             dateDiff,
             didSucceed = false,
@@ -82,7 +85,7 @@ export class HashDog {
             i = 1,
             colors = require('colors/safe');
 
-        this.status[msg.thread] = msg;
+        this.status[data.thread] = data;
 
         if (this.status.wl.success === true) {
             didSucceed = true;
@@ -104,6 +107,7 @@ export class HashDog {
                 console.log('  Status...............: ' + colors.yellow(self.status[key].status));
                 console.log('  Success..............: ' + self.status[key].success);
                 console.log('  Uptime...............: ' + self.status[key].uptime + ' seconds');
+                console.log('  Key length...........: ' + Util.numberWithCommas(self.status[key].keyLength));
                 console.log('  Keys (tried).........: ' + Util.numberWithCommas(self.status[key].keysTried));
                 console.log('  Keys (total).........: ' + Util.numberWithCommas(self.status[key].keysTotal));
                 console.log('  Percentage...........: ' + self.status[key].percentage + '%');

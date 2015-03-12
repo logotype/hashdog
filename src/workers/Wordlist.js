@@ -28,9 +28,13 @@ export class Wordlist extends BaseWorker {
         this.data.status = 'Loading dictionary';
         this.sendStatus();
         wordArray = require('../data/wordlist-english.json').data;
-        wordArray = wordArray.filter((element) => {
-            return element.length === options.length;
-        });
+
+        // If a password length is specified, filter the array
+        if(options.length) {
+            wordArray = wordArray.filter((element) => {
+                return element.length === options.length;
+            });
+        }
 
         this.data.status = 'Working';
         this.sendStatus();
@@ -47,6 +51,7 @@ export class Wordlist extends BaseWorker {
                 this.data.status = 'SUCCESS';
                 this.data.success = true;
                 this.data.uptime = process.uptime().toFixed(2);
+                this.data.keyLength = wordArray[i].length;
                 this.data.keysTried = i;
                 this.data.hash = hash;
 
@@ -72,6 +77,7 @@ export class Wordlist extends BaseWorker {
                 this.data.status = 'Working';
                 this.data.success = false;
                 this.data.uptime = process.uptime().toFixed(2);
+                this.data.keyLength = wordArray[i].length;
                 this.data.keysTried = i;
                 this.data.keysTotal = wordArray.length;
                 this.data.rate = rate.toFixed(2);
@@ -86,6 +92,7 @@ export class Wordlist extends BaseWorker {
         }
         this.data.percentage = 100;
         this.data.uptime = process.uptime().toFixed(2);
+        this.data.keyLength = wordArray[i - 1].length;
         this.data.keysTried = i;
         this.data.keysTotal = wordArray.length;
         this.data.status = 'Unsuccessful';

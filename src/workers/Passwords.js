@@ -92,9 +92,12 @@ export class Passwords extends BaseWorker {
         this.data.uptime = process.uptime().toFixed(2);
         this.sendStatus();
 
-        this.passwordArray = this.passwordArray.filter((element) => {
-            return element.length === self.passwordLength;
-        });
+        // If a password length is specified, filter the array
+        if(this.passwordLength) {
+            this.passwordArray = this.passwordArray.filter((element) => {
+                return element.length === self.passwordLength;
+            });
+        }
 
         this.data.status = 'Working';
         this.data.uptime = process.uptime().toFixed(2);
@@ -107,6 +110,7 @@ export class Passwords extends BaseWorker {
                 this.data.status = 'SUCCESS';
                 this.data.success = true;
                 this.data.uptime = process.uptime().toFixed(2);
+                this.data.keyLength = this.passwordArray[i].length;
                 this.data.keysTried = i;
                 this.data.hash = hash;
                 this.data.string = currentString;
@@ -127,6 +131,7 @@ export class Passwords extends BaseWorker {
                 this.data.status = 'Working';
                 this.data.success = false;
                 this.data.uptime = process.uptime().toFixed(2);
+                this.data.keyLength = this.passwordArray[i].length;
                 this.data.keysTried = i;
                 this.data.keysTotal = this.passwordArray.length;
                 this.data.rate = rate.toFixed(2);
@@ -141,7 +146,9 @@ export class Passwords extends BaseWorker {
         }
         this.data.percentage = 100;
         this.data.uptime = process.uptime().toFixed(2);
+        this.data.keyLength = this.passwordArray[i - 1].length;
         this.data.keysTried = i;
+        this.data.keysTotal = this.passwordArray.length;
         this.data.status = 'Unsuccessful';
         this.data.string = '';
         this.sendStatus();

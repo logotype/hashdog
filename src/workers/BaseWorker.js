@@ -7,11 +7,12 @@
  */
 export class BaseWorker {
     constructor(options) {
-        this.refreshRate = 500;
+        this.refreshRate = options.refreshRate;
         this.match = options.match;
         this.string = '';
         this.lastDate = new Date();
         this.data = {
+            type: 'display',
             name: 'BaseWorker',
             thread: 'bw',
             status: '',
@@ -19,6 +20,7 @@ export class BaseWorker {
             success: false,
             percentage: 0,
             rate: 0,
+            keyLength: 0,
             keysTried: 0,
             keysTotal: 0,
             expected: this.match,
@@ -28,6 +30,10 @@ export class BaseWorker {
 
     initialize(options) {
         throw new Error('Must override initialize!');
+    }
+
+    sendData(data) {
+        process.send(data);
     }
 
     sendStatus() {
