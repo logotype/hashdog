@@ -7,6 +7,7 @@
  */
 import {MD5} from './../hash/MD5';
 import {SHA1} from './../hash/SHA1';
+import {SHA256} from './../hash/SHA256';
 export class BaseWorker {
     constructor(options) {
         this.refreshRate = options.refreshRate;
@@ -36,6 +37,9 @@ export class BaseWorker {
             case 'SHA1':
                 this.hasher = SHA1;
                 break;
+            case 'SHA256':
+                this.hasher = SHA256;
+                break;
             default:
                 throw new Error('Unsupported hash type');
         }
@@ -43,10 +47,6 @@ export class BaseWorker {
 
     initialize(options) {
         throw new Error('Must override initialize!');
-    }
-
-    sendData(data) {
-        process.send(data);
     }
 
     sendStatus() {

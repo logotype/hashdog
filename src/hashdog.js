@@ -14,12 +14,42 @@ export class HashDog {
 
     constructor(options) {
 
+        const SHA1RegExp = /^[0-9a-f]{40}$/i;
+        const SHA256RegExp = /^[0-9a-f]{64}$/i;
+        const MD5RegExp = /^[0-9a-f]{32}$/i;
+
         if(!options || !options.hash) {
             throw new Error('Missing options!');
         } else if(!options.hash) {
             throw new Error('Missing hash!');
         } else if(!options.type) {
-            throw new Error('Missing hash type!');
+            if(MD5RegExp.test(options.hash)) {
+                options.type = 'MD5';
+            } else if(SHA1RegExp.test(options.hash)) {
+                options.type = 'SHA1';
+            } else if(SHA256RegExp.test(options.hash)) {
+                options.type = 'SHA256';
+            } else {
+                throw new Error('Please specify hash type with the --type parameter');
+            }
+        }
+
+        switch(options.type) {
+            case 'MD5':
+                if(!MD5RegExp.test(options.hash)) {
+                    throw new Error('Invalid MD5 hash!');
+                }
+                break;
+            case 'SHA1':
+                if(!SHA1RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA1 hash!');
+                }
+                break;
+            case 'SHA256':
+                if(!SHA256RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA256 hash!');
+                }
+                break;
         }
 
         let self = this,
