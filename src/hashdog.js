@@ -19,7 +19,7 @@ export class HashDog {
         }
 
         let self = this,
-            worker, refreshRate = 120,
+            worker, refreshRate = 500,
             cluster = require('cluster'),
             numCPUs = require('os').cpus().length;
 

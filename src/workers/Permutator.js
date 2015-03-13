@@ -15,7 +15,6 @@ export class Permutator extends BaseWorker {
         super(options);
 
         this.permutations = 0;
-        this.foundMatch = false;
         this.lastPermutations = 0;
         this.tryCompleteKeyspace = false;
         this.options = {};
@@ -31,54 +30,50 @@ export class Permutator extends BaseWorker {
 
         if(!this.options.length) {
             this.options.length = 2;
+        } else if (this.options.length >= 16) {
+            console.log('Exceeded maximum key length!');
+            return;
         }
 
         // Reset data
         this.permutations = 0;
-        this.foundMatch = false;
         this.lastPermutations = 0;
         this.string = '';
         this.data.keyLength = this.options.length;
-
         this.data.keysTotal = Math.pow(this.options.chars.length, this.options.length);
+
+        for (let j = 0; j < this.options.length; j++) {
+            this.string += ' ';
+        }
+
         this.permute(this.options.length);
     }
 
     permute(n) {
         let j, hash, currentDate, dateDiff, permDiff, percentage, rate;
 
-        if (this.foundMatch) {
-            return;
-        }
-
-        if(parseInt(this.permutations) === parseInt(this.data.keysTotal) - 1) {
-           if(this.tryCompleteKeyspace) {
-               this.options.length++;
-               this.initialize(this.options);
-               return;
-           } else {
-               this.data.status = 'Unsuccessful';
-               this.data.success = false;
-               this.data.uptime = process.uptime().toFixed(2);
-               this.data.keysTried = this.permutations + 1;
-               this.data.percentage = 100;
-               this.data.string = '';
-               this.sendStatus();
-               process.exit(0);
-           }
-        }
-
-        if (this.string.length === 0) {
-            this.string = '';
-            for (j = 0; j < n; j++) {
-                this.string += ' ';
-            }
-        }
-
         if (n === 0) {
+            if(parseInt(this.permutations) >= (parseInt(this.data.keysTotal) - 1)) {
+                if(this.tryCompleteKeyspace) {
+                    this.options.length++;
+                    this.initialize(this.options);
+                    return;
+                } else {
+                    console.log('STOP');
+                    this.data.status = 'Unsuccessful';
+                    this.data.success = false;
+                    this.data.uptime = process.uptime().toFixed(2);
+                    this.data.keysTried = this.permutations + 1;
+                    this.data.percentage = 100;
+                    this.data.string = '';
+                    this.sendStatus();
+                    process.exit(0);
+                }
+            }
+
             hash = MD5.hash(this.string);
+
             if (hash === this.match) {
-                this.foundMatch = true;
                 this.data.status = 'SUCCESS';
                 this.data.success = true;
                 this.data.uptime = process.uptime();
