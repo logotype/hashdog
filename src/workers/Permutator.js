@@ -6,7 +6,6 @@
  * Released under the MIT license
  */
 import {BaseWorker} from './BaseWorker';
-import {MD5} from './../util/MD5';
 import {Util} from './../util/Util';
 
 export class Permutator extends BaseWorker {
@@ -59,7 +58,6 @@ export class Permutator extends BaseWorker {
                     this.initialize(this.options);
                     return;
                 } else {
-                    console.log('STOP');
                     this.data.status = 'Unsuccessful';
                     this.data.success = false;
                     this.data.uptime = process.uptime().toFixed(2);
@@ -71,7 +69,7 @@ export class Permutator extends BaseWorker {
                 }
             }
 
-            hash = MD5.hash(this.string);
+            hash = this.hasher.hash(this.string);
 
             if (hash === this.match) {
                 this.data.status = 'SUCCESS';

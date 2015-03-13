@@ -1,5 +1,5 @@
 # hashdog
-Break MD5 hashes using wordlists, password lists and string permutations.
+Break MD5/SHA1 hashes using wordlists, password lists and string permutations.
 
 Written in ECMAScript 6, and runs multiple forked processes for better performance. Using IPC calls in the cluster. In the initial version, three different strategies are used for finding the correct hash. The first method is a english dictionary, along with a few word variations. The second path is using common passwords, while the third strategy is a bruteforce approach. The approach in this case is standard sequential recursive string permutation.
 
@@ -14,45 +14,53 @@ Build and run an instance of the `Hashdog` class by running `hashdog-cli` in the
 
 ```javascript
 gulp
-./build/hashdog-cli --md5 2655dd21148f2433763d313407d5d820 --length 4
+./build/hashdog-cli --hash 6d86ca3c74636711371637c2d73ec3e48dd1737a --type SHA1
 ```
 
 Example output:
 
 ```bash
+hashdog by @logotype. Copyright © 2015. Released under the MIT license.
+Hash: 6d86ca3c74636711371637c2d73ec3e48dd1737a type: SHA1 characters: ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789
+
 THREAD 1:
   Worker...............: <Dictionary> Words
   Status...............: Unsuccessful
   Success..............: false
-  Uptime...............: 0.63 seconds
-  Keys (tried).........: 5,272
-  Keys (total).........: 5,272
+  Uptime...............: 7.79 seconds
+  Key length...........: 10
+  Keys (tried).........: 235,886
+  Keys (total).........: 235,886
   Percentage...........: 100%
-  Rate.................: 0 kHash/s
-  String...............: 
+  Rate.................: 32.55 kHash/s
+  String...............:
 THREAD 2:
   Worker...............: <Dictionary> Passwords
-  Status...............: Reading password list
+  Status...............: Unsuccessful
   Success..............: false
-  Uptime...............: 7.70 seconds
-  Keys (tried).........: 0
-  Keys (total).........: 0
-  Percentage...........: 0%
-  Rate.................: 0 kHash/s
-  String...............: 
+  Uptime...............: 106.90 seconds
+  Key length...........: 12
+  Keys (tried).........: 14,342,365
+  Keys (total).........: 14,342,365
+  Percentage...........: 100%
+  Rate.................: 184.54 kHash/s
+  String...............:
 THREAD 3:
   Worker...............: <Bruteforce> Permutations
   Status...............: SUCCESS
   Success..............: true
-  Uptime...............: 22.981 seconds
+  Uptime...............: 187.713 seconds
+  Key length...........: 4
   Keys (tried).........: 11,545,148
   Keys (total).........: 13,845,841
-  Percentage...........: 82.00%
-  Rate.................: 565.65 kHash/s
+  Percentage...........: 83.36%
+  Rate.................: 70.31 kHash/s
   String...............: tr1z
 ----------------------------------------------------------------------
-2655dd21148f2433763d313407d5d820 : tr1z
-The process took 23.00 seconds.
+6d86ca3c74636711371637c2d73ec3e48dd1737a : tr1z
+Started................: Fri, 13 Mar 2015 14:14:40 GMT
+Ended..................: Fri, 13 Mar 2015 14:17:48 GMT
+The process took 187.75 seconds.
 ```
 
 Copyright and license

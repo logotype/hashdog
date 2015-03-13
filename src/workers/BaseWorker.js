@@ -5,6 +5,8 @@
  * Copyright 2015 Victor Norgren
  * Released under the MIT license
  */
+import {MD5} from './../hash/MD5';
+import {SHA1} from './../hash/SHA1';
 export class BaseWorker {
     constructor(options) {
         this.refreshRate = options.refreshRate;
@@ -26,6 +28,17 @@ export class BaseWorker {
             expected: this.match,
             string: ''
         };
+
+        switch(options.type.toUpperCase()) {
+            case 'MD5':
+                this.hasher = MD5;
+                break;
+            case 'SHA1':
+                this.hasher = SHA1;
+                break;
+            default:
+                throw new Error('Unsupported hash type');
+        }
     }
 
     initialize(options) {

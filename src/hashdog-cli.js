@@ -10,12 +10,13 @@ var program = require('commander'),
 
 program
     .version(pkg.version)
-    .option('-m, --md5 <md5>', 'MD5 hash')
+    .option('-h, --hash <hash>', 'hash')
+    .option('-t, --type <type>', 'type of hash <md5, sha1> (defaults to md5)')
     .option('-l, --length <length>', 'length of password string (defaults to 6)', parseInt)
     .option('-c, --chars <chars>', 'characters used for permutation (defaults to ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789)')
     .parse(process.argv);
 
-if (!program.md5)
-    throw new Error('Parameters required: --md5\n\n');
+if (!program.hash)
+    throw new Error('Parameters required: --hash\n\n');
 
-hashDog = new HashDog({hash: program.md5, length: program.length, chars: program.chars});
+hashDog = new HashDog({hash: program.hash, type: program.type, length: program.length, chars: program.chars});

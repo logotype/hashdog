@@ -6,7 +6,7 @@
  * Released under the MIT license
  */
 import {BaseWorker} from './BaseWorker';
-import {MD5} from './../util/MD5';
+import {MD5} from './../hash/MD5';
 
 export class Wordlist extends BaseWorker {
 
@@ -44,7 +44,7 @@ export class Wordlist extends BaseWorker {
             currentStringLeet = currentString.replace(/i/g, '1').replace(/o/g, '0').replace(/e/g, '3');
 
             hash = MD5.hash(currentString);
-            hashLeet = MD5.hash(currentStringLeet);
+            hashLeet = this.hasher.hash(currentStringLeet);
 
             if (this.match === hash || this.match === hashLeet) {
 

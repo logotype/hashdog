@@ -6,7 +6,6 @@
  * Released under the MIT license
  */
 import {BaseWorker} from './BaseWorker';
-import {MD5} from './../util/MD5';
 
 export class Passwords extends BaseWorker {
 
@@ -105,7 +104,7 @@ export class Passwords extends BaseWorker {
 
         for (i; i < this.passwordArray.length; i++) {
             currentString = this.passwordArray[i];
-            hash = MD5.hash(currentString);
+            hash = this.hasher.hash(currentString);
             if (this.match === hash) {
                 this.data.status = 'SUCCESS';
                 this.data.success = true;
