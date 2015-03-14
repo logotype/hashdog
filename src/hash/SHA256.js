@@ -59,12 +59,15 @@ export class SHA256 {
                 g = H6,
                 h = H7;
 
-            for (let t = 0; t < 16; t++) W[t] = M[i][t];
-            for (let t = 16; t < 64; t++) W[t] = (SHA256.sigma1(W[t - 2]) + W[t - 7] + SHA256.sigma0(W[t - 15]) + W[t - 16]) & 0xffffffff;
-
             for (let t = 0; t < 64; t++) {
-                let T1 = h + SHA256.bigSigma1(e) + SHA256.add4(e, f, g) + K[t] + W[t];
-                let T2 = SHA256.bigSigma0(a) + SHA256.add5(a, b, c);
+                if(t < 16) {
+                    W[t] = M[i][t];
+                } else {
+                    W[t] = (SHA256.sigma1(W[t - 2]) + W[t - 7] + SHA256.sigma0(W[t - 15]) + W[t - 16]) & 0xffffffff;
+                }
+
+                let T1 = h + SHA256.gamma1(e) + SHA256.add4(e, f, g) + K[t] + W[t];
+                let T2 = SHA256.gamma0(a) + SHA256.add5(a, b, c);
                 h = g;
                 g = f;
                 f = e;
@@ -88,11 +91,11 @@ export class SHA256 {
         return SHA256.hex(H0) + SHA256.hex(H1) + SHA256.hex(H2) + SHA256.hex(H3) + SHA256.hex(H4) + SHA256.hex(H5) + SHA256.hex(H6) + SHA256.hex(H7);
     }
 
-    static bigSigma0(x) {
+    static gamma0(x) {
         return SHA256.ROTR(2, x) ^ SHA256.ROTR(13, x) ^ SHA256.ROTR(22, x);
     }
 
-    static bigSigma1(x) {
+    static gamma1(x) {
         return SHA256.ROTR(6, x) ^ SHA256.ROTR(11, x) ^ SHA256.ROTR(25, x);
     }
 

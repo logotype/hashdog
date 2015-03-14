@@ -16,6 +16,7 @@ export class HashDog {
 
         const SHA1RegExp = /^[0-9a-f]{40}$/i;
         const SHA256RegExp = /^[0-9a-f]{64}$/i;
+        const SHA512RegExp = /^[0-9a-f]{128}$/i;
         const MD5RegExp = /^[0-9a-f]{32}$/i;
 
         if(!options || !options.hash) {
@@ -29,6 +30,8 @@ export class HashDog {
                 options.type = 'SHA1';
             } else if(SHA256RegExp.test(options.hash)) {
                 options.type = 'SHA256';
+            } else if(SHA512RegExp.test(options.hash)) {
+                options.type = 'SHA512';
             } else {
                 throw new Error('Please specify hash type with the --type parameter');
             }
@@ -48,6 +51,11 @@ export class HashDog {
             case 'SHA256':
                 if(!SHA256RegExp.test(options.hash)) {
                     throw new Error('Invalid SHA256 hash!');
+                }
+                break;
+            case 'SHA512':
+                if(!SHA512RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA512 hash!');
                 }
                 break;
         }
