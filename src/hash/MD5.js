@@ -112,6 +112,10 @@ export class MD5 {
         return MD5.cmn(c ^ (b | (~d)), a, b, x, s, t);
     }
 
+    static add32(a, b) {
+        return (a + b) & 0xFFFFFFFF;
+    }
+
     static md51(s) {
         let n = s.length,
             state = [1732584193, -271733879, -1732584194, 271733878],
@@ -164,9 +168,5 @@ export class MD5 {
             x[i] = MD5.rhex(x[i]);
         }
         return x.join('');
-    }
-
-    static add32(a, b) {
-        return (a + b) & 0xFFFFFFFF;
     }
 }

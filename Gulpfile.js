@@ -55,4 +55,10 @@ gulp.task('test', ['clean:cli'], function () {
         }));
 });
 
+gulp.task('perf', function () {
+    return gulp.src(['./perf/**/*.js'])
+        .pipe($.babel())
+        .pipe(gulp.dest('./perfbuild'));
+});
+
 gulp.task('default', ['jshint', 'clean:build', 'copy:data', 'transpile', 'cli', 'clean:cli', 'test']);

@@ -67,7 +67,7 @@ describe('Hashers', () => {
                 assert.equal('1e07be23c26a86ea37ea810c8ec7809352515a970e9253c26f536cfc7a9996c45c8370583e0a78fa4a90041d71a4ceab7423f19c71b9d5a3e01249f0bebd5894', SHA512.hash('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'));
                 assert.equal('72ec1ef1124a45b047e8b7c75a932195135bb61de24ec0d1914042246e0aec3a2354e093d76f3048b456764346900cb130d2a4fd5dd16abb5e30bcb850dee843', SHA512.hash('12345678901234567890123456789012345678901234567890123456789012345678901234567890'));
             });
-            it('should return a hash with length 64 characters', () => {
+            it('should return a hash with length 128 characters', () => {
                 let hash = SHA512.hash('cryptographic hash function');
                 assert.equal(hash.length, 128);
             });
