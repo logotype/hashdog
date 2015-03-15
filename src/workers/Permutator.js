@@ -80,8 +80,6 @@ export class Permutator extends BaseWorker {
                 this.data.string = this.string;
                 this.sendStatus();
                 process.exit(0);
-            } else {
-                this.permutations++;
             }
 
             currentDate = new Date();
@@ -99,13 +97,12 @@ export class Permutator extends BaseWorker {
                 this.data.rate = (rate / 1000).toFixed(2);
                 this.data.percentage = percentage;
                 this.data.string = this.string;
-
                 this.sendStatus();
-
                 this.lastPermutations = this.permutations;
                 this.lastDate = currentDate;
             }
 
+            this.permutations++;
         } else {
             for (j = 0; j < this.options.chars.length; j++) {
                 this.string = Util.replaceCharAtIndex(this.string, n - 1, this.options.chars[j]);

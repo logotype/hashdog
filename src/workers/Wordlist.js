@@ -66,9 +66,7 @@ export class Wordlist extends BaseWorker {
                 break;
             }
             if (i > 0 && i % 100000 === 0) {
-
                 currentDate = new Date();
-
                 dateDiff = currentDate - this.lastDate;
                 triesDiff = i - this.lastTries;
                 percentage = ((i / wordArray.length) * 100).toFixed(2);
@@ -83,9 +81,7 @@ export class Wordlist extends BaseWorker {
                 this.data.rate = rate.toFixed(2);
                 this.data.percentage = percentage;
                 this.data.string = currentString;
-
                 this.sendStatus();
-
                 this.lastTries = i;
                 this.lastDate = currentDate;
             }

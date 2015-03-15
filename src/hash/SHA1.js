@@ -8,7 +8,7 @@
 export class SHA1 {
 
     static hash(string) {
-        const K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
+        const K = new Uint32Array([0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6]);
 
         let H0 = 0x67452301,
             H1 = 0xefcdab89,
@@ -16,7 +16,7 @@ export class SHA1 {
             H3 = 0x10325476,
             H4 = 0xc3d2e1f0,
             M = [],
-            W = [],
+            W = new Int32Array(80),
             N, i, j, s, T,
             a = H0,
             b = H1,
@@ -43,7 +43,7 @@ export class SHA1 {
 
         for (i = 0; i < N; i++) {
 
-            W = [];
+            W = new Int32Array(80);
             a = H0;
             b = H1;
             c = H2;

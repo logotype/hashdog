@@ -122,7 +122,6 @@ export class Passwords extends BaseWorker {
             dateDiff = currentDate - this.lastDate;
 
             if (dateDiff >= this.refreshRate) {
-
                 triesDiff = i - this.lastTries;
                 percentage = ((i / this.passwordArray.length) * 100).toFixed(2);
                 rate = triesDiff * (1000 / dateDiff) / 1000;
