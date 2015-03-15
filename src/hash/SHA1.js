@@ -45,10 +45,13 @@ export class SHA1 {
                 d = H3,
                 e = H4;
 
-            for (let t = 0; t < 16; t++) W[t] = M[i][t];
-            for (let t = 16; t < 80; t++) W[t] = SHA1.ROTL(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
-
             for (let t = 0; t < 80; t++) {
+                if(t < 16) {
+                    W[t] = M[i][t];
+                } else {
+                    W[t] = SHA1.ROTL(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
+                }
+
                 let s = Math.floor(t / 20);
                 let T = (SHA1.ROTL(a, 5) + SHA1.f(s, b, c, d) + e + K[s] + W[t]) & 0xffffffff;
                 e = d;

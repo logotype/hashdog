@@ -16,7 +16,7 @@ for(i; i < length; i++) {
 }
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
-console.log('   MD5 rate: ' + rate.toFixed(2) + ' hashes/sec');
+console.log('   MD5 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
 i = 0;
 startDate = new Date();
@@ -25,7 +25,7 @@ for(i; i < length; i++) {
 }
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
-console.log('  SHA1 rate: ' + rate.toFixed(2) + ' hashes/sec');
+console.log('  SHA1 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
 i = 0;
 startDate = new Date();
@@ -34,7 +34,7 @@ for(i; i < length; i++) {
 }
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
-console.log('SHA256 rate: ' + rate.toFixed(2) + ' hashes/sec');
+console.log('SHA256 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
 i = 0;
 startDate = new Date();
@@ -43,6 +43,6 @@ for(i; i < length; i++) {
 }
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
-console.log('SHA512 rate: ' + rate.toFixed(2) + ' hashes/sec');
+console.log('SHA512 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
 console.log('');
