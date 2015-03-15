@@ -56,10 +56,10 @@ export class SHA512 {
                 {high: 0x3c6ef372, low: 0xfe94f82b}, {high: 0xa54ff53a, low: 0x5f1d36f1},
                 {high: 0x510e527f, low: 0xade682d1}, {high: 0x9b05688c, low: 0x2b3e6c1f},
                 {high: 0x1f83d9ab, low: 0xfb41bd6b}, {high: 0x5be0cd19, low: 0x137e2179}
-            ];
-
-        let W = [],
+            ],
+            W = [],
             a, b, c, d, e, f, g, h, i,
+            N, T1, T2,
             stringArray = [],
             stringLength = (string.length * 8);
 
@@ -70,8 +70,10 @@ export class SHA512 {
         stringArray[stringLength >> 5] |= 0x80 << (24 - stringLength % 32);
         stringArray[(((stringLength + 128) >> 10) << 5) + 31] = stringLength;
         string = stringArray;
+        N = string.length;
 
-        for (i = 0; i < string.length; i += 32) {
+        for (i = 0; i < N; i += 32) {
+            W = [];
             a = H[0];
             b = H[1];
             c = H[2];
@@ -91,8 +93,8 @@ export class SHA512 {
                     W[t] = SHA512.add4(SHA512.gamma1(W[t - 2]), W[t - 7], SHA512.gamma0(W[t - 15]), W[t - 16]);
                 }
 
-                let T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), K[t], W[t]);
-                let T2 = SHA512.add2(SHA512.sigma0(a), SHA512.maj(a, b, c));
+                T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), K[t], W[t]);
+                T2 = SHA512.add2(SHA512.sigma0(a), SHA512.maj(a, b, c));
                 h = g;
                 g = f;
                 f = e;

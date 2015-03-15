@@ -18,20 +18,28 @@ export class SHA256 {
             0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
         ];
 
-        let l, N, M = [],
-            i, j,
-            H0 = 0x6a09e667,
+        let H0 = 0x6a09e667,
             H1 = 0xbb67ae85,
             H2 = 0x3c6ef372,
             H3 = 0xa54ff53a,
             H4 = 0x510e527f,
             H5 = 0x9b05688c,
             H6 = 0x1f83d9ab,
-            H7 = 0x5be0cd19;
+            H7 = 0x5be0cd19,
+            M = [],
+            W = [],
+            N, i, j, T1, T2,
+            a = H0,
+            b = H1,
+            c = H2,
+            d = H3,
+            e = H4,
+            f = H5,
+            g = H6,
+            h = H7;
 
         string += String.fromCharCode(0x80);
-        l = string.length / 4 + 2;
-        N = Math.ceil(l / 16);
+        N = Math.ceil((string.length / 4 + 2) / 16);
 
         for (i = 0; i < N; i++) {
             M[i] = [];
@@ -49,15 +57,15 @@ export class SHA256 {
 
         for (i = 0; i < N; i++) {
 
-            let W = [],
-                a = H0,
-                b = H1,
-                c = H2,
-                d = H3,
-                e = H4,
-                f = H5,
-                g = H6,
-                h = H7;
+            W = [];
+            a = H0;
+            b = H1;
+            c = H2;
+            d = H3;
+            e = H4;
+            f = H5;
+            g = H6;
+            h = H7;
 
             for (let t = 0; t < 64; t++) {
                 if(t < 16) {
@@ -66,8 +74,8 @@ export class SHA256 {
                     W[t] = (SHA256.sigma1(W[t - 2]) + W[t - 7] + SHA256.sigma0(W[t - 15]) + W[t - 16]) & 0xffffffff;
                 }
 
-                let T1 = h + SHA256.gamma1(e) + SHA256.add4(e, f, g) + K[t] + W[t];
-                let T2 = SHA256.gamma0(a) + SHA256.add5(a, b, c);
+                T1 = h + SHA256.gamma1(e) + SHA256.add4(e, f, g) + K[t] + W[t];
+                T2 = SHA256.gamma0(a) + SHA256.add5(a, b, c);
                 h = g;
                 g = f;
                 f = e;

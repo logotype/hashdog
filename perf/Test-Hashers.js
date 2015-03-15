@@ -45,4 +45,5 @@ dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 console.log('SHA512 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
+console.log('Performance tests ran successfully.');
 console.log('');

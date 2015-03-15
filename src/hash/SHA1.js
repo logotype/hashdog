@@ -10,17 +10,22 @@ export class SHA1 {
     static hash(string) {
         const K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
 
-        let l, N, M = [],
-            i, j,
-            H0 = 0x67452301,
+        let H0 = 0x67452301,
             H1 = 0xefcdab89,
             H2 = 0x98badcfe,
             H3 = 0x10325476,
-            H4 = 0xc3d2e1f0;
+            H4 = 0xc3d2e1f0,
+            M = [],
+            W = [],
+            N, i, j, s, T,
+            a = H0,
+            b = H1,
+            c = H2,
+            d = H3,
+            e = H4;
 
         string += String.fromCharCode(0x80);
-        l = string.length / 4 + 2;
-        N = Math.ceil(l / 16);
+        N = Math.ceil((string.length / 4 + 2) / 16);
 
         for (i = 0; i < N; i++) {
             M[i] = [];
@@ -38,12 +43,12 @@ export class SHA1 {
 
         for (i = 0; i < N; i++) {
 
-            let W = [],
-                a = H0,
-                b = H1,
-                c = H2,
-                d = H3,
-                e = H4;
+            W = [];
+            a = H0;
+            b = H1;
+            c = H2;
+            d = H3;
+            e = H4;
 
             for (let t = 0; t < 80; t++) {
                 if(t < 16) {
@@ -52,8 +57,8 @@ export class SHA1 {
                     W[t] = SHA1.ROTL(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
                 }
 
-                let s = Math.floor(t / 20);
-                let T = (SHA1.ROTL(a, 5) + SHA1.f(s, b, c, d) + e + K[s] + W[t]) & 0xffffffff;
+                s = Math.floor(t / 20);
+                T = (SHA1.ROTL(a, 5) + SHA1.f(s, b, c, d) + e + K[s] + W[t]) & 0xffffffff;
                 e = d;
                 d = c;
                 c = SHA1.ROTL(b, 30);
