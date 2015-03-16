@@ -14,7 +14,7 @@ Build and run an instance of the `Hashdog` class by running `hashdog-cli` in the
 
 ```javascript
 gulp
-./build/hashdog-cli --hash 6d86ca3c74636711371637c2d73ec3e48dd1737a
+./build/hashdog-cli 6d86ca3c74636711371637c2d73ec3e48dd1737a
 ```
 
 Example output:

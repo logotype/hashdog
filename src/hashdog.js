@@ -33,7 +33,7 @@ export class HashDog {
             } else if(SHA512RegExp.test(options.hash)) {
                 options.type = 'SHA512';
             } else {
-                throw new Error('Please specify hash type with the --type parameter');
+                throw new Error('Please specify hash type!');
             }
         }
 
@@ -66,7 +66,7 @@ export class HashDog {
             numCPUs = require('os').cpus().length;
 
         this.startDate = new Date();
-        this.match = options.hash;
+        this.match = options.hash.toLowerCase();
         this.type = options.type;
         this.chars = options.chars || 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789';
         this.fixedLength = options.length;
@@ -169,10 +169,10 @@ export class HashDog {
             endDate = new Date();
             dateDiff = endDate - this.startDate;
             console.log('----------------------------------------------------------------------');
-            console.log(this.match + ' : ' + colors.green(secret));
             console.log('Started................: ' + this.startDate.toUTCString());
             console.log('Ended..................: ' + endDate.toUTCString());
             console.log('The process took ' + (dateDiff / 1000).toFixed(2) + ' seconds.');
+            console.log(this.match + ' : ' + colors.green(secret));
             process.exit(0);
         }
     }

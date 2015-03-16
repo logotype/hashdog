@@ -10,13 +10,14 @@ var program = require('commander'),
 
 program
     .version(pkg.version)
-    .option('-h, --hash <hash>', 'hash')
-    .option('-t, --type <type>', 'type of hash <md5, sha1> (defaults to md5)')
-    .option('-l, --length <length>', 'length of password string (defaults to 6)', parseInt)
-    .option('-c, --chars <chars>', 'characters used for permutation (defaults to ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789)')
+    .usage('2655dd21148f2433763d313407d5d820')
+    .option('-t, --type [type]', 'type of hash: MD5, SHA1, SHA256, SHA512 (defaults to auto detect)')
+    .option('-l, --length [length>', 'fixed length of password string (defaults to range 0-16)', parseInt)
+    .option('-c, --chars [chars]', 'characters used for permutation (defaults to ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789)')
     .parse(process.argv);
 
-if (!program.hash)
-    throw new Error('Parameters required: --hash\n\n');
-
-hashDog = new HashDog({hash: program.hash, type: program.type, length: program.length, chars: program.chars});
+if (!program.args.length) {
+    program.help();
+} else {
+    hashDog = new HashDog({hash: program.args[0], type: program.type, length: program.length, chars: program.chars});
+}
