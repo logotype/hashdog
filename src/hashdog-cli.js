@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {HashDog} from './hashdog';
+import {HashDog} from '../build/hashdog';
 
 process.title = 'hashdog';
 

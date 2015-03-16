@@ -1,6 +1,6 @@
 {
   "name": "hashdog",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
@@ -8,6 +8,9 @@
   },
   "license": "MIT",
   "main": "src",
+  "bin": {
+    "hashdog": "./bin/hashdog-cli.js"
+  },
   "dependencies": {
     "commander": "latest",
     "colors": "latest",

@@ -41,9 +41,8 @@ gulp.task('transpile', ['clean:build'], function() {
 
 gulp.task('cli', ['transpile'], function() {
     return gulp.src('./build/hashdog-cli.js')
-        .pipe(rename('hashdog-cli'))
         .pipe(chmod(755))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('./bin'));
 });
 
 gulp.task('test', ['clean:cli'], function () {
