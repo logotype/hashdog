@@ -7,7 +7,7 @@ import {Util} from './../build/util/Util';
 Util.cls();
 console.log('Running performance tests...');
 
-let i, length = 1000000, startDate, dateDiff, rate;
+let i, length = 100000, startDate, dateDiff, rate;
 
 i = 0;
 startDate = new Date();

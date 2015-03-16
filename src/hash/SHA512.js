@@ -8,48 +8,42 @@
 export class SHA512 {
 
     static hash(string) {
-        const K = [
-            {high: 0x428a2f98, low: 0xd728ae22}, {high: 0x71374491, low: 0x23ef65cd},
-            {high: 0xb5c0fbcf, low: 0xec4d3b2f}, {high: 0xe9b5dba5, low: 0x8189dbbc},
-            {high: 0x3956c25b, low: 0xf348b538}, {high: 0x59f111f1, low: 0xb605d019},
-            {high: 0x923f82a4, low: 0xaf194f9b}, {high: 0xab1c5ed5, low: 0xda6d8118},
-            {high: 0xd807aa98, low: 0xa3030242}, {high: 0x12835b01, low: 0x45706fbe},
-            {high: 0x243185be, low: 0x4ee4b28c}, {high: 0x550c7dc3, low: 0xd5ffb4e2},
-            {high: 0x72be5d74, low: 0xf27b896f}, {high: 0x80deb1fe, low: 0x3b1696b1},
-            {high: 0x9bdc06a7, low: 0x25c71235}, {high: 0xc19bf174, low: 0xcf692694},
-            {high: 0xe49b69c1, low: 0x9ef14ad2}, {high: 0xefbe4786, low: 0x384f25e3},
-            {high: 0x0fc19dc6, low: 0x8b8cd5b5}, {high: 0x240ca1cc, low: 0x77ac9c65},
-            {high: 0x2de92c6f, low: 0x592b0275}, {high: 0x4a7484aa, low: 0x6ea6e483},
-            {high: 0x5cb0a9dc, low: 0xbd41fbd4}, {high: 0x76f988da, low: 0x831153b5},
-            {high: 0x983e5152, low: 0xee66dfab}, {high: 0xa831c66d, low: 0x2db43210},
-            {high: 0xb00327c8, low: 0x98fb213f}, {high: 0xbf597fc7, low: 0xbeef0ee4},
-            {high: 0xc6e00bf3, low: 0x3da88fc2}, {high: 0xd5a79147, low: 0x930aa725},
-            {high: 0x06ca6351, low: 0xe003826f}, {high: 0x14292967, low: 0x0a0e6e70},
-            {high: 0x27b70a85, low: 0x46d22ffc}, {high: 0x2e1b2138, low: 0x5c26c926},
-            {high: 0x4d2c6dfc, low: 0x5ac42aed}, {high: 0x53380d13, low: 0x9d95b3df},
-            {high: 0x650a7354, low: 0x8baf63de}, {high: 0x766a0abb, low: 0x3c77b2a8},
-            {high: 0x81c2c92e, low: 0x47edaee6}, {high: 0x92722c85, low: 0x1482353b},
-            {high: 0xa2bfe8a1, low: 0x4cf10364}, {high: 0xa81a664b, low: 0xbc423001},
-            {high: 0xc24b8b70, low: 0xd0f89791}, {high: 0xc76c51a3, low: 0x0654be30},
-            {high: 0xd192e819, low: 0xd6ef5218}, {high: 0xd6990624, low: 0x5565a910},
-            {high: 0xf40e3585, low: 0x5771202a}, {high: 0x106aa070, low: 0x32bbd1b8},
-            {high: 0x19a4c116, low: 0xb8d2d0c8}, {high: 0x1e376c08, low: 0x5141ab53},
-            {high: 0x2748774c, low: 0xdf8eeb99}, {high: 0x34b0bcb5, low: 0xe19b48a8},
-            {high: 0x391c0cb3, low: 0xc5c95a63}, {high: 0x4ed8aa4a, low: 0xe3418acb},
-            {high: 0x5b9cca4f, low: 0x7763e373}, {high: 0x682e6ff3, low: 0xd6b2b8a3},
-            {high: 0x748f82ee, low: 0x5defb2fc}, {high: 0x78a5636f, low: 0x43172f60},
-            {high: 0x84c87814, low: 0xa1f0ab72}, {high: 0x8cc70208, low: 0x1a6439ec},
-            {high: 0x90befffa, low: 0x23631e28}, {high: 0xa4506ceb, low: 0xde82bde9},
-            {high: 0xbef9a3f7, low: 0xb2c67915}, {high: 0xc67178f2, low: 0xe372532b},
-            {high: 0xca273ece, low: 0xea26619c}, {high: 0xd186b8c7, low: 0x21c0c207},
-            {high: 0xeada7dd6, low: 0xcde0eb1e}, {high: 0xf57d4f7f, low: 0xee6ed178},
-            {high: 0x06f067aa, low: 0x72176fba}, {high: 0x0a637dc5, low: 0xa2c898a6},
-            {high: 0x113f9804, low: 0xbef90dae}, {high: 0x1b710b35, low: 0x131c471b},
-            {high: 0x28db77f5, low: 0x23047d84}, {high: 0x32caab7b, low: 0x40c72493},
-            {high: 0x3c9ebe0a, low: 0x15c9bebc}, {high: 0x431d67c4, low: 0x9c100d4c},
-            {high: 0x4cc5d4be, low: 0xcb3e42b6}, {high: 0x597f299c, low: 0xfc657e2a},
-            {high: 0x5fcb6fab, low: 0x3ad6faec}, {high: 0x6c44198c, low: 0x4a475817}
-        ];
+        const KH = new Uint32Array([
+            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
+            0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
+            0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7,
+            0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+            0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152,
+            0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+            0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
+            0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819,
+            0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08,
+            0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f,
+            0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+            0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2, 0xca273ece,
+            0xd186b8c7, 0xeada7dd6, 0xf57d4f7f, 0x06f067aa, 0x0a637dc5,
+            0x113f9804, 0x1b710b35, 0x28db77f5, 0x32caab7b, 0x3c9ebe0a,
+            0x431d67c4, 0x4cc5d4be, 0x597f299c, 0x5fcb6fab, 0x6c44198c
+        ]);
+        const KL = new Uint32Array([
+            0xd728ae22, 0x23ef65cd, 0xec4d3b2f, 0x8189dbbc, 0xf348b538,
+            0xb605d019, 0xaf194f9b, 0xda6d8118, 0xa3030242, 0x45706fbe,
+            0x4ee4b28c, 0xd5ffb4e2, 0xf27b896f, 0x3b1696b1, 0x25c71235,
+            0xcf692694, 0x9ef14ad2, 0x384f25e3, 0x8b8cd5b5, 0x77ac9c65,
+            0x592b0275, 0x6ea6e483, 0xbd41fbd4, 0x831153b5, 0xee66dfab,
+            0x2db43210, 0x98fb213f, 0xbeef0ee4, 0x3da88fc2, 0x930aa725,
+            0xe003826f, 0x0a0e6e70, 0x46d22ffc, 0x5c26c926, 0x5ac42aed,
+            0x9d95b3df, 0x8baf63de, 0x3c77b2a8, 0x47edaee6, 0x1482353b,
+            0x4cf10364, 0xbc423001, 0xd0f89791, 0x0654be30, 0xd6ef5218,
+            0x5565a910, 0x5771202a, 0x32bbd1b8, 0xb8d2d0c8, 0x5141ab53,
+            0xdf8eeb99, 0xe19b48a8, 0xc5c95a63, 0xe3418acb, 0x7763e373,
+            0xd6b2b8a3, 0x5defb2fc, 0x43172f60, 0xa1f0ab72, 0x1a6439ec,
+            0x23631e28, 0xde82bde9, 0xb2c67915, 0xe372532b, 0xea26619c,
+            0x21c0c207, 0xcde0eb1e, 0xee6ed178, 0x72176fba, 0xa2c898a6,
+            0xbef90dae, 0x131c471b, 0x23047d84, 0x40c72493, 0x15c9bebc,
+            0x9c100d4c, 0xcb3e42b6, 0xfc657e2a, 0x3ad6faec, 0x4a475817
+        ]);
 
         let H = [
                 {high: 0x6a09e667, low: 0xf3bcc908}, {high: 0xbb67ae85, low: 0x84caa73b},
@@ -93,7 +87,7 @@ export class SHA512 {
                     W[t] = SHA512.add4(SHA512.gamma1(W[t - 2]), W[t - 7], SHA512.gamma0(W[t - 15]), W[t - 16]);
                 }
 
-                T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), K[t], W[t]);
+                T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), KH[t], KL[t], W[t]);
                 T2 = SHA512.add2(SHA512.sigma0(a), SHA512.maj(a, b, c));
                 h = g;
                 g = f;
@@ -152,15 +146,15 @@ export class SHA512 {
         };
     }
 
-    static add5(a, b, c, d, e) {
+    static add5(a, b, c, dHigh, dLow, e) {
         let lsw, msw, low, high;
 
-        lsw = (a.low & 0xFFFF) + (b.low & 0xFFFF) + (c.low & 0xFFFF) + (d.low & 0xFFFF) + (e.low & 0xFFFF);
-        msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (d.low >>> 16) + (e.low >>> 16) + (lsw >>> 16);
+        lsw = (a.low & 0xFFFF) + (b.low & 0xFFFF) + (c.low & 0xFFFF) + (dLow & 0xFFFF) + (e.low & 0xFFFF);
+        msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (dLow >>> 16) + (e.low >>> 16) + (lsw >>> 16);
         low = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
 
-        lsw = (a.high & 0xFFFF) + (b.high & 0xFFFF) + (c.high & 0xFFFF) + (d.high & 0xFFFF) + (e.high & 0xFFFF) + (msw >>> 16);
-        msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (d.high >>> 16) + (e.high >>> 16) + (lsw >>> 16);
+        lsw = (a.high & 0xFFFF) + (b.high & 0xFFFF) + (c.high & 0xFFFF) + (dHigh & 0xFFFF) + (e.high & 0xFFFF) + (msw >>> 16);
+        msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (dHigh >>> 16) + (e.high >>> 16) + (lsw >>> 16);
         high = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
 
         return {
