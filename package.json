@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "test": "mocha --compilers js:babel/register test/**/*.js",
-    "perf": "gulp; gulp perf; iojs perfbuild/Test-Hashers.js"
+    "perf": "gulp; gulp perf; iojs perfbuild/Test-Hashers.js",
+    "prepublish": "gulp"
   }
 }
