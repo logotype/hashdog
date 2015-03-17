@@ -1,4 +1,3 @@
-import {HashDog} from '../src/HashDog';
 var assert = require('assert');
 
 describe('HashDog', () => {
