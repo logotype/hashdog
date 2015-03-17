@@ -27,7 +27,7 @@ export class Wordlist extends BaseWorker {
 
         this.data.status = 'Loading dictionary';
         this.sendStatus();
-        wordArray = require('../data/wordlist-english.json').data;
+        wordArray = require('../../data/wordlist-english.json').data;
 
         // If a password length is specified, filter the array
         if(options.length) {

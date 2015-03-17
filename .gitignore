@@ -2,5 +2,5 @@ node_modules/
 .idea/
 *.iml
 src/tmp/
-build/
+build/tmp/
 perfbuild/

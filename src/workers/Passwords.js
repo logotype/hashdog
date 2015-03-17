@@ -37,7 +37,7 @@ export class Passwords extends BaseWorker {
         this.data.uptime = process.uptime().toFixed(2);
         this.sendStatus();
 
-        fs.createReadStream(join(__dirname, '../data/data.tar.gz'))
+        fs.createReadStream(join(__dirname, '../../data/data.tar.gz'))
             .on('error', console.log)
             .pipe(zlib.Unzip())
             .pipe(tar.Parse())

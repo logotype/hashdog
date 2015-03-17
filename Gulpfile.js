@@ -28,13 +28,8 @@ gulp.task('clean:cli', ['cli'], function (cb) {
     return del(['build/hashdog-cli.js'], cb);
 });
 
-gulp.task('copy:data', ['clean:build'], function() {
-    return gulp.src( [ './src/data/**/*' ], { "base" : "./src" })
-        .pipe(gulp.dest('./build'));
-});
-
 gulp.task('transpile', ['clean:build'], function() {
-    return gulp.src(['./src/**/*.js'])
+    return gulp.src('./src/**/*.js')
         .pipe($.babel())
         .pipe(gulp.dest('./build'));
 });
@@ -60,4 +55,4 @@ gulp.task('perf', function () {
         .pipe(gulp.dest('./perfbuild'));
 });
 
-gulp.task('default', ['jshint', 'clean:build', 'copy:data', 'transpile', 'cli', 'clean:cli', 'test']);
+gulp.task('default', ['jshint', 'clean:build', 'transpile', 'cli', 'clean:cli', 'test']);
