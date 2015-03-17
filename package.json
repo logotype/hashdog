@@ -1,6 +1,6 @@
 {
   "name": "hashdog",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
@@ -42,7 +42,6 @@
   ],
   "scripts": {
     "test": "mocha --compilers js:babel/register test/**/*.js",
-    "perf": "./node_modules/gulp-cli/bin/gulp.js; ./node_modules/gulp-cli/bin/gulp.js perf; iojs perfbuild/Test-Hashers.js",
-    "prepublish": "gulp"
+    "perf": "./node_modules/gulp-cli/bin/gulp.js; ./node_modules/gulp-cli/bin/gulp.js perf; iojs perfbuild/Test-Hashers.js"
   }
 }

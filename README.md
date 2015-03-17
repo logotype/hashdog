@@ -5,16 +5,28 @@ Written in ECMAScript 6, and runs multiple forked processes for better performan
 
 [![Build Status](https://travis-ci.org/logotype/hashdog.svg?branch=master)](https://travis-ci.org/logotype/hashdog) [![NPM Version](https://badge.fury.io/js/hashdog.svg)](http://badge.fury.io/js/hashdog)
 
-Quick start
------------
+CLI
+---
 
-Clone the repo, `git clone git://github.com/logotype/hashdog.git`.
+Install hashdog globally, `sudo npm install hashdog -g`.
 
-Build and run an instance of the `Hashdog` class by running `hashdog-cli` in the CLI:
+Run `Hashdog` in your terminal (run with no arguments for help screen):
+
+```bash
+hashdog 6d86ca3c74636711371637c2d73ec3e48dd1737a
+```
+
+io.js/node
+----------
+
+Import and instantiate `Hashdog` (you might need to transpile the codebase from ES6 due to lack of support for modules and other features):
 
 ```javascript
-gulp
-./build/hashdog-cli 6d86ca3c74636711371637c2d73ec3e48dd1737a
+import {HashDog} from 'hashdog';
+let hashDog = new HashDog({hash: '2655dd21148f2433763d313407d5d820', type: 'MD5', length: 8, chars: 'AaBbCcDdEeFf'});
+hashDog.on('success', (data) => {
+    console.log(data.hash + ':' + data.string);
+});
 ```
 
 Example output:
@@ -58,8 +70,8 @@ THREAD 3:
   String...............: tr1z
 ----------------------------------------------------------------------
 6d86ca3c74636711371637c2d73ec3e48dd1737a : tr1z
-Started................: Fri, 13 Mar 2015 14:14:40 GMT
-Ended..................: Fri, 13 Mar 2015 14:17:48 GMT
+Started................: Tue, 17 Mar 2015 14:14:40 GMT
+Ended..................: Tue, 17 Mar 2015 14:17:48 GMT
 The process took 187.75 seconds.
 ```
 
