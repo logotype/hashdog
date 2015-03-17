@@ -43,7 +43,7 @@ export class SHA256 {
         N = Math.ceil((string.length / 4 + 2) / 16);
 
         for (i = 0; i < N; i++) {
-            M[i] = [];
+            M[i] = new Int32Array(16);
             for (j = 0; j < 16; j++) {
                 M[i][j] = (string.charCodeAt(i * 64 + j * 4) << 24) |
                 (string.charCodeAt(i * 64 + j * 4 + 1) << 16) |

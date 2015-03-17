@@ -30,7 +30,7 @@ var SHA1 = exports.SHA1 = (function () {
                     H2 = 2562383102,
                     H3 = 271733878,
                     H4 = 3285377520,
-                    M = [],
+                    M = new Map(),
                     W = new Int32Array(80),
                     N = undefined,
                     i = undefined,
@@ -47,7 +47,7 @@ var SHA1 = exports.SHA1 = (function () {
                 N = Math.ceil((string.length / 4 + 2) / 16);
 
                 for (i = 0; i < N; i++) {
-                    M[i] = [];
+                    M[i] = new Int32Array(16);
                     for (j = 0; j < 16; j++) {
                         M[i][j] = string.charCodeAt(i * 64 + j * 4) << 24 | string.charCodeAt(i * 64 + j * 4 + 1) << 16 | string.charCodeAt(i * 64 + j * 4 + 2) << 8 | string.charCodeAt(i * 64 + j * 4 + 3);
                     }

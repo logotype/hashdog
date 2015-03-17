@@ -42,8 +42,8 @@ export class SHA512 {
             W = [],
             a, b, c, d, e, f, g, h, i,
             N, T1, T2,
-            stringArray = [],
-            stringLength = (string.length * 8);
+            stringLength = string.length * 8,
+            stringArray = new Int32Array(32);
 
         for (i = 0; i < stringLength; i += 8) {
             stringArray[i >> 5] |= (string.charCodeAt(i / 8) & ((1 << 8) - 1)) << (32 - 8 - (i % 32));

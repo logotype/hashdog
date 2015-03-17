@@ -15,7 +15,7 @@ export class SHA1 {
             H2 = 0x98badcfe,
             H3 = 0x10325476,
             H4 = 0xc3d2e1f0,
-            M = [],
+            M = new Map(),
             W = new Int32Array(80),
             N, i, j, s, T,
             a = H0,
@@ -28,7 +28,7 @@ export class SHA1 {
         N = Math.ceil((string.length / 4 + 2) / 16);
 
         for (i = 0; i < N; i++) {
-            M[i] = [];
+            M[i] = new Int32Array(16);
             for (j = 0; j < 16; j++) {
                 M[i][j] = (string.charCodeAt(i * 64 + j * 4) << 24) |
                 (string.charCodeAt(i * 64 + j * 4 + 1) << 16) |

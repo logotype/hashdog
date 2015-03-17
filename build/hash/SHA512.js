@@ -40,8 +40,8 @@ var SHA512 = exports.SHA512 = (function () {
                     N = undefined,
                     T1 = undefined,
                     T2 = undefined,
-                    stringArray = [],
-                    stringLength = string.length * 8;
+                    stringLength = string.length * 8,
+                    stringArray = new Int32Array(32);
 
                 for (i = 0; i < stringLength; i += 8) {
                     stringArray[i >> 5] |= (string.charCodeAt(i / 8) & (1 << 8) - 1) << 32 - 8 - i % 32;
