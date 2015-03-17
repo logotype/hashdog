@@ -2,6 +2,8 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
@@ -23,7 +25,9 @@ var Passwords = require("./workers/Passwords").Passwords;
 
 var Util = require("./util/Util").Util;
 
-var HashDog = exports.HashDog = (function () {
+var EventEmitter = require("events").EventEmitter;
+
+var HashDog = exports.HashDog = (function (_EventEmitter) {
     function HashDog(options) {
         var _this = this;
 
@@ -33,6 +37,12 @@ var HashDog = exports.HashDog = (function () {
         var SHA256RegExp = /^[0-9a-f]{64}$/i;
         var SHA512RegExp = /^[0-9a-f]{128}$/i;
         var MD5RegExp = /^[0-9a-f]{32}$/i;
+
+        var self = this,
+            worker = undefined,
+            refreshRate = 500,
+            cluster = require("cluster"),
+            numCPUs = require("os").cpus().length;
 
         if (!options || !options.hash) {
             throw new Error("Missing options!");
@@ -75,11 +85,11 @@ var HashDog = exports.HashDog = (function () {
                 break;
         }
 
-        var self = this,
-            worker = undefined,
-            refreshRate = 500,
-            cluster = require("cluster"),
-            numCPUs = require("os").cpus().length;
+        if (options && options.environment === "CLI") {
+            this.environment = "CLI";
+        } else {
+            this.environment = "LIB";
+        }
 
         this.startDate = new Date();
         this.match = options.hash.toLowerCase();
@@ -101,7 +111,11 @@ var HashDog = exports.HashDog = (function () {
                 worker = cluster.fork();
                 worker.on("message", function (data) {
                     if (data.type === "display") {
-                        self.display(data);
+                        if (self.environment === "CLI") {
+                            self.display(data);
+                        } else if (self.environment === "LIB") {
+                            self.sendEvents(data);
+                        }
                     }
                 });
                 this.workers.push(worker);
@@ -135,6 +149,8 @@ var HashDog = exports.HashDog = (function () {
             });
         }
     }
+
+    _inherits(HashDog, _EventEmitter);
 
     _createClass(HashDog, {
         display: {
@@ -194,10 +210,41 @@ var HashDog = exports.HashDog = (function () {
                     process.exit(0);
                 }
             }
+        },
+        sendEvents: {
+            value: function sendEvents(data) {
+                var self = this,
+                    didSucceed = false,
+                    secret = "";
+
+                this.status[data.thread] = data;
+
+                if (this.status.wl.success === true) {
+                    didSucceed = true;
+                    secret = this.status.wl.string;
+                } else if (this.status.pl.success === true) {
+                    didSucceed = true;
+                    secret = this.status.pl.string;
+                } else if (this.status.sp.success === true) {
+                    didSucceed = true;
+                    secret = this.status.sp.string;
+                }
+
+                Object.keys(self.status).forEach(function (key) {
+                    if (self.status[key].hasOwnProperty("status")) {
+                        self.emit("progress", self.status[key]);
+                    }
+                });
+
+                if (didSucceed) {
+                    self.emit("success", { hash: this.match, string: secret });
+                    process.exit(0);
+                }
+            }
         }
     });
 
     return HashDog;
-})();
+})(EventEmitter);
 
 exports["default"] = HashDog;

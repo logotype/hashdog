@@ -19,5 +19,5 @@ program
 if (!program.args.length) {
     program.help();
 } else {
-    hashDog = new HashDog({hash: program.args[0], type: program.type, length: program.length, chars: program.chars});
+    hashDog = new HashDog({hash: program.args[0], type: program.type, length: program.length, chars: program.chars, environment: 'CLI'});
 }

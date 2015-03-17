@@ -4,3 +4,4 @@ node_modules/
 src/tmp/
 build/tmp/
 perfbuild/
+data/data.bin

@@ -15,5 +15,5 @@ program.version(pkg.version).usage("2655dd21148f2433763d313407d5d820").option("-
 if (!program.args.length) {
     program.help();
 } else {
-    hashDog = new HashDog({ hash: program.args[0], type: program.type, length: program.length, chars: program.chars });
+    hashDog = new HashDog({ hash: program.args[0], type: program.type, length: program.length, chars: program.chars, environment: "CLI" });
 }

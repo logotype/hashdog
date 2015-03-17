@@ -27,7 +27,6 @@ export class Passwords extends BaseWorker {
             fs = require('fs'),
             path = require('path'),
             join = require('path').join,
-            mkdirp = require('mkdirp'),
             zlib = require('zlib'),
             tar = require('tar');
 
@@ -42,18 +41,13 @@ export class Passwords extends BaseWorker {
             .pipe(zlib.Unzip())
             .pipe(tar.Parse())
             .on('entry', (entry) => {
-                fullPath = path.join('./build/tmp', entry.path);
+                fullPath = join(__dirname, '../../data/data.bin');
                 self.data.status = 'Extracting password list';
                 self.data.uptime = process.uptime().toFixed(2);
                 self.sendStatus();
-                mkdirp(path.dirname(fullPath), (err) => {
-                    if (err) {
-                        throw err;
-                    }
-                    entry.pipe(fs.createWriteStream(fullPath));
-                    entry.on('end', function() {
-                        self.processList(fullPath);
-                    });
+                entry.pipe(fs.createWriteStream(fullPath));
+                entry.on('end', function() {
+                    self.processList(fullPath);
                 });
             });
     }
@@ -70,6 +64,8 @@ export class Passwords extends BaseWorker {
 
         source.pipe(liner);
         source.on('end', () => {
+            console.log('deleting: ' + path);
+            fs.unlinkSync(path);
             self.passwordsByLengthProcess();
         });
 

@@ -9,8 +9,9 @@ import {Permutator} from './workers/Permutator';
 import {Wordlist} from './workers/Wordlist';
 import {Passwords} from './workers/Passwords';
 import {Util} from './util/Util';
+import {EventEmitter} from 'events';
 
-export class HashDog {
+export class HashDog extends EventEmitter {
 
     constructor(options) {
 
@@ -18,6 +19,11 @@ export class HashDog {
         const SHA256RegExp = /^[0-9a-f]{64}$/i;
         const SHA512RegExp = /^[0-9a-f]{128}$/i;
         const MD5RegExp = /^[0-9a-f]{32}$/i;
+
+        let self = this,
+            worker, refreshRate = 500,
+            cluster = require('cluster'),
+            numCPUs = require('os').cpus().length;
 
         if(!options || !options.hash) {
             throw new Error('Missing options!');
@@ -60,10 +66,11 @@ export class HashDog {
                 break;
         }
 
-        let self = this,
-            worker, refreshRate = 500,
-            cluster = require('cluster'),
-            numCPUs = require('os').cpus().length;
+        if(options && options.environment === 'CLI') {
+            this.environment = 'CLI';
+        } else {
+            this.environment = 'LIB';
+        }
 
         this.startDate = new Date();
         this.match = options.hash.toLowerCase();
@@ -85,7 +92,11 @@ export class HashDog {
                 worker = cluster.fork();
                 worker.on('message', (data) => {
                     if (data.type === 'display') {
-                        self.display(data);
+                        if(self.environment === 'CLI') {
+                            self.display(data);
+                        } else if(self.environment === 'LIB') {
+                            self.sendEvents(data);
+                        }
                     }
                 });
                 this.workers.push(worker);
@@ -173,6 +184,36 @@ export class HashDog {
             console.log('Ended..................: ' + endDate.toUTCString());
             console.log('The process took ' + (dateDiff / 1000).toFixed(2) + ' seconds.');
             console.log(this.match + ' : ' + colors.green(secret));
+            process.exit(0);
+        }
+    }
+
+    sendEvents(data) {
+        let self = this,
+            didSucceed = false,
+            secret = '';
+
+        this.status[data.thread] = data;
+
+        if (this.status.wl.success === true) {
+            didSucceed = true;
+            secret = this.status.wl.string;
+        } else if (this.status.pl.success === true) {
+            didSucceed = true;
+            secret = this.status.pl.string;
+        } else if (this.status.sp.success === true) {
+            didSucceed = true;
+            secret = this.status.sp.string;
+        }
+
+        Object.keys(self.status).forEach((key) => {
+            if (self.status[key].hasOwnProperty('status')) {
+                self.emit('progress', self.status[key]);
+            }
+        });
+
+        if (didSucceed) {
+            self.emit('success', {hash: this.match, string: secret});
             process.exit(0);
         }
     }
