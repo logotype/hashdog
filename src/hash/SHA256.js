@@ -116,11 +116,11 @@ export class SHA256 {
         return output;
     }
 
-    static ROTL(X, n) {
+    static rotl(X, n) {
         return (X >>> n) | (X << (32 - n));
     }
 
-    static ROTR(X, n) {
+    static rotr(X, n) {
         return (X >>> n);
     }
 
@@ -133,19 +133,19 @@ export class SHA256 {
     }
 
     static sigma0256(x) {
-        return (SHA256.ROTL(x, 2) ^ SHA256.ROTL(x, 13) ^ SHA256.ROTL(x, 22));
+        return (SHA256.rotl(x, 2) ^ SHA256.rotl(x, 13) ^ SHA256.rotl(x, 22));
     }
 
     static sigma1256(x) {
-        return (SHA256.ROTL(x, 6) ^ SHA256.ROTL(x, 11) ^ SHA256.ROTL(x, 25));
+        return (SHA256.rotl(x, 6) ^ SHA256.rotl(x, 11) ^ SHA256.rotl(x, 25));
     }
 
     static gamma0256(x) {
-        return (SHA256.ROTL(x, 7) ^ SHA256.ROTL(x, 18) ^ SHA256.ROTR(x, 3));
+        return (SHA256.rotl(x, 7) ^ SHA256.rotl(x, 18) ^ SHA256.rotr(x, 3));
     }
 
     static gamma1256(x) {
-        return (SHA256.ROTL(x, 17) ^ SHA256.ROTL(x, 19) ^ SHA256.ROTR(x, 10));
+        return (SHA256.rotl(x, 17) ^ SHA256.rotl(x, 19) ^ SHA256.rotr(x, 10));
     }
 
     static add(x, y) {

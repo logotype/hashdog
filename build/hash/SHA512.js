@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", {
  * Released under the MIT license
  */
 
+var Int64 = require("./Int64").Int64;
+
 var SHA512 = exports.SHA512 = (function () {
     function SHA512() {
         _classCallCheck(this, SHA512);
@@ -23,248 +25,163 @@ var SHA512 = exports.SHA512 = (function () {
     _createClass(SHA512, null, {
         hash: {
             value: function hash(string) {
-                var KH = new Uint32Array([1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298, 3391569614, 3515267271, 3940187606, 4118630271, 116418474, 174292421, 289380356, 460393269, 685471733, 852142971, 1017036298, 1126000580, 1288033470, 1501505948, 1607167915, 1816402316]);
-                var KL = new Uint32Array([3609767458, 602891725, 3964484399, 2173295548, 4081628472, 3053834265, 2937671579, 3664609560, 2734883394, 1164996542, 1323610764, 3590304994, 4068182383, 991336113, 633803317, 3479774868, 2666613458, 944711139, 2341262773, 2007800933, 1495990901, 1856431235, 3175218132, 2198950837, 3999719339, 766784016, 2566594879, 3203337956, 1034457026, 2466948901, 3758326383, 168717936, 1188179964, 1546045734, 1522805485, 2643833823, 2343527390, 1014477480, 1206759142, 344077627, 1290863460, 3158454273, 3505952657, 106217008, 3606008344, 1432725776, 1467031594, 851169720, 3100823752, 1363258195, 3750685593, 3785050280, 3318307427, 3812723403, 2003034995, 3602036899, 1575990012, 1125592928, 2716904306, 442776044, 593698344, 3733110249, 2999351573, 3815920427, 3928383900, 566280711, 3454069534, 4000239992, 1914138554, 2731055270, 3203993006, 320620315, 587496836, 1086792851, 365543100, 2618297676, 3409855158, 4234509866, 987167468, 1246189591]);
-
-                var H = [{ high: 1779033703, low: 4089235720 }, { high: 3144134277, low: 2227873595 }, { high: 1013904242, low: 4271175723 }, { high: 2773480762, low: 1595750129 }, { high: 1359893119, low: 2917565137 }, { high: 2600822924, low: 725511199 }, { high: 528734635, low: 4215389547 }, { high: 1541459225, low: 327033209 }],
-                    W = [],
-                    a = undefined,
-                    b = undefined,
-                    c = undefined,
-                    d = undefined,
-                    e = undefined,
-                    f = undefined,
-                    g = undefined,
-                    h = undefined,
+                return SHA512.stringToHex(SHA512.arrayToString(SHA512.run(SHA512.stringToArray(string), string.length * 8)));
+            }
+        },
+        run: {
+            value: function run(input, len) {
+                var K = [new Int64(1116352408, -685199838), new Int64(1899447441, 602891725), new Int64(-1245643825, -330482897), new Int64(-373957723, -2121671748), new Int64(961987163, -213338824), new Int64(1508970993, -1241133031), new Int64(-1841331548, -1357295717), new Int64(-1424204075, -630357736), new Int64(-670586216, -1560083902), new Int64(310598401, 1164996542), new Int64(607225278, 1323610764), new Int64(1426881987, -704662302), new Int64(1925078388, -226784913), new Int64(-2132889090, 991336113), new Int64(-1680079193, 633803317), new Int64(-1046744716, -815192428), new Int64(-459576895, -1628353838), new Int64(-272742522, 944711139), new Int64(264347078, -1953704523), new Int64(604807628, 2007800933), new Int64(770255983, 1495990901), new Int64(1249150122, 1856431235), new Int64(1555081692, -1119749164), new Int64(1996064986, -2096016459), new Int64(-1740746414, -295247957), new Int64(-1473132947, 766784016), new Int64(-1341970488, -1728372417), new Int64(-1084653625, -1091629340), new Int64(-958395405, 1034457026), new Int64(-710438585, -1828018395), new Int64(113926993, -536640913), new Int64(338241895, 168717936), new Int64(666307205, 1188179964), new Int64(773529912, 1546045734), new Int64(1294757372, 1522805485), new Int64(1396182291, -1651133473), new Int64(1695183700, -1951439906), new Int64(1986661051, 1014477480), new Int64(-2117940946, 1206759142), new Int64(-1838011259, 344077627), new Int64(-1564481375, 1290863460), new Int64(-1474664885, -1136513023), new Int64(-1035236496, -789014639), new Int64(-949202525, 106217008), new Int64(-778901479, -688958952), new Int64(-694614492, 1432725776), new Int64(-200395387, 1467031594), new Int64(275423344, 851169720), new Int64(430227734, -1194143544), new Int64(506948616, 1363258195), new Int64(659060556, -544281703), new Int64(883997877, -509917016), new Int64(958139571, -976659869), new Int64(1322822218, -482243893), new Int64(1537002063, 2003034995), new Int64(1747873779, -692930397), new Int64(1955562222, 1575990012), new Int64(2024104815, 1125592928), new Int64(-2067236844, -1578062990), new Int64(-1933114872, 442776044), new Int64(-1866530822, 593698344), new Int64(-1538233109, -561857047), new Int64(-1090935817, -1295615723), new Int64(-965641998, -479046869), new Int64(-903397682, -366583396), new Int64(-779700025, 566280711), new Int64(-354779690, -840897762), new Int64(-176337025, -294727304), new Int64(116418474, 1914138554), new Int64(174292421, -1563912026), new Int64(289380356, -1090974290), new Int64(460393269, 320620315), new Int64(685471733, 587496836), new Int64(852142971, 1086792851), new Int64(1017036298, 365543100), new Int64(1126000580, -1676669620), new Int64(1288033470, -885112138), new Int64(1501505948, -60457430), new Int64(1607167915, 987167468), new Int64(1816402316, 1246189591)],
+                    j = undefined,
                     i = undefined,
-                    N = undefined,
-                    T1 = undefined,
-                    T2 = undefined,
-                    stringLength = string.length * 8,
-                    stringArray = new Int32Array(32);
+                    l = undefined,
+                    T1 = new Int64(0, 0),
+                    T2 = new Int64(0, 0),
+                    W = Array(80),
+                    hash = Array(16),
+                    H = [new Int64(1779033703, -205731576), new Int64(-1150833019, -2067093701), new Int64(1013904242, -23791573), new Int64(-1521486534, 1595750129), new Int64(1359893119, -1377402159), new Int64(-1694144372, 725511199), new Int64(528734635, -79577749), new Int64(1541459225, 327033209)],
+                    a = new Int64(0, 0),
+                    b = new Int64(0, 0),
+                    c = new Int64(0, 0),
+                    d = new Int64(0, 0),
+                    e = new Int64(0, 0),
+                    f = new Int64(0, 0),
+                    g = new Int64(0, 0),
+                    h = new Int64(0, 0),
+                    s0 = new Int64(0, 0),
+                    s1 = new Int64(0, 0),
+                    Ch = new Int64(0, 0),
+                    Maj = new Int64(0, 0),
+                    r1 = new Int64(0, 0),
+                    r2 = new Int64(0, 0),
+                    r3 = new Int64(0, 0);
 
-                for (i = 0; i < stringLength; i += 8) {
-                    stringArray[i >> 5] |= (string.charCodeAt(i / 8) & (1 << 8) - 1) << 32 - 8 - i % 32;
+                // W.fill(new Int64(0, 0)); didn't work
+                for (i = 0; i < 80; i += 1) {
+                    W[i] = new Int64(0, 0);
                 }
 
-                stringArray[stringLength >> 5] |= 128 << 24 - stringLength % 32;
-                stringArray[(stringLength + 128 >> 10 << 5) + 31] = stringLength;
-                string = stringArray;
-                N = string.length;
+                input[len >> 5] |= 128 << 24 - (len & 31);
+                input[(len + 128 >> 10 << 5) + 31] = len;
+                l = input.length;
 
-                for (i = 0; i < N; i += 32) {
-                    W = [];
-                    a = H[0];
-                    b = H[1];
-                    c = H[2];
-                    d = H[3];
-                    e = H[4];
-                    f = H[5];
-                    g = H[6];
-                    h = H[7];
+                for (i = 0; i < l; i += 32) {
+                    Int64.copy(a, H[0]);
+                    Int64.copy(b, H[1]);
+                    Int64.copy(c, H[2]);
+                    Int64.copy(d, H[3]);
+                    Int64.copy(e, H[4]);
+                    Int64.copy(f, H[5]);
+                    Int64.copy(g, H[6]);
+                    Int64.copy(h, H[7]);
 
-                    for (var t = 0; t < 80; t++) {
-                        if (t < 16) {
-                            W[t] = {
-                                high: string[t * 2 + i],
-                                low: string[t * 2 + i + 1]
-                            };
-                        } else {
-                            W[t] = SHA512.add4(SHA512.gamma1(W[t - 2]), W[t - 7], SHA512.gamma0(W[t - 15]), W[t - 16]);
-                        }
-
-                        T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), KH[t], KL[t], W[t]);
-                        T2 = SHA512.add2(SHA512.sigma0(a), SHA512.maj(a, b, c));
-                        h = g;
-                        g = f;
-                        f = e;
-                        e = SHA512.add2(d, T1);
-                        d = c;
-                        c = b;
-                        b = a;
-                        a = SHA512.add2(T1, T2);
+                    for (j = 0; j < 16; j += 1) {
+                        W[j].h = input[i + 2 * j];
+                        W[j].l = input[i + 2 * j + 1];
                     }
 
-                    H[0] = SHA512.add2(a, H[0]);
-                    H[1] = SHA512.add2(b, H[1]);
-                    H[2] = SHA512.add2(c, H[2]);
-                    H[3] = SHA512.add2(d, H[3]);
-                    H[4] = SHA512.add2(e, H[4]);
-                    H[5] = SHA512.add2(f, H[5]);
-                    H[6] = SHA512.add2(g, H[6]);
-                    H[7] = SHA512.add2(h, H[7]);
+                    for (j = 16; j < 80; j += 1) {
+                        Int64.rotr(r1, W[j - 2], 19);
+                        Int64.rotl(r2, W[j - 2], 29);
+                        Int64.shr(r3, W[j - 2], 6);
+                        s1.l = r1.l ^ r2.l ^ r3.l;
+                        s1.h = r1.h ^ r2.h ^ r3.h;
+
+                        Int64.rotr(r1, W[j - 15], 1);
+                        Int64.rotr(r2, W[j - 15], 8);
+                        Int64.shr(r3, W[j - 15], 7);
+                        s0.l = r1.l ^ r2.l ^ r3.l;
+                        s0.h = r1.h ^ r2.h ^ r3.h;
+
+                        Int64.add4(W[j], s1, W[j - 7], s0, W[j - 16]);
+                    }
+
+                    for (j = 0; j < 80; j += 1) {
+                        Ch.l = e.l & f.l ^ ~e.l & g.l;
+                        Ch.h = e.h & f.h ^ ~e.h & g.h;
+
+                        Int64.rotr(r1, e, 14);
+                        Int64.rotr(r2, e, 18);
+                        Int64.rotl(r3, e, 9);
+                        s1.l = r1.l ^ r2.l ^ r3.l;
+                        s1.h = r1.h ^ r2.h ^ r3.h;
+
+                        Int64.rotr(r1, a, 28);
+                        Int64.rotl(r2, a, 2);
+                        Int64.rotl(r3, a, 7);
+                        s0.l = r1.l ^ r2.l ^ r3.l;
+                        s0.h = r1.h ^ r2.h ^ r3.h;
+
+                        Maj.l = a.l & b.l ^ a.l & c.l ^ b.l & c.l;
+                        Maj.h = a.h & b.h ^ a.h & c.h ^ b.h & c.h;
+
+                        Int64.add5(T1, h, s1, Ch, K[j], W[j]);
+                        Int64.add(T2, s0, Maj);
+
+                        Int64.copy(h, g);
+                        Int64.copy(g, f);
+                        Int64.copy(f, e);
+                        Int64.add(e, d, T1);
+                        Int64.copy(d, c);
+                        Int64.copy(c, b);
+                        Int64.copy(b, a);
+                        Int64.add(a, T1, T2);
+                    }
+
+                    Int64.add(H[0], H[0], a);
+                    Int64.add(H[1], H[1], b);
+                    Int64.add(H[2], H[2], c);
+                    Int64.add(H[3], H[3], d);
+                    Int64.add(H[4], H[4], e);
+                    Int64.add(H[5], H[5], f);
+                    Int64.add(H[6], H[6], g);
+                    Int64.add(H[7], H[7], h);
                 }
 
-                return SHA512.hex(H[0].high) + SHA512.hex(H[0].low) + SHA512.hex(H[1].high) + SHA512.hex(H[1].low) + SHA512.hex(H[2].high) + SHA512.hex(H[2].low) + SHA512.hex(H[3].high) + SHA512.hex(H[3].low) + SHA512.hex(H[4].high) + SHA512.hex(H[4].low) + SHA512.hex(H[5].high) + SHA512.hex(H[5].low) + SHA512.hex(H[6].high) + SHA512.hex(H[6].low) + SHA512.hex(H[7].high) + SHA512.hex(H[7].low);
-            }
-        },
-        add2: {
-            value: function add2(x, y) {
-                var lsw = undefined,
-                    msw = undefined,
-                    low = undefined,
-                    high = undefined;
-
-                lsw = (x.low & 65535) + (y.low & 65535);
-                msw = (x.low >>> 16) + (y.low >>> 16) + (lsw >>> 16);
-                low = (msw & 65535) << 16 | lsw & 65535;
-
-                lsw = (x.high & 65535) + (y.high & 65535) + (msw >>> 16);
-                msw = (x.high >>> 16) + (y.high >>> 16) + (lsw >>> 16);
-                high = (msw & 65535) << 16 | lsw & 65535;
-
-                return {
-                    high: high,
-                    low: low
-                };
-            }
-        },
-        add4: {
-            value: function add4(a, b, c, d) {
-                var lsw = undefined,
-                    msw = undefined,
-                    low = undefined,
-                    high = undefined;
-
-                lsw = (a.low & 65535) + (b.low & 65535) + (c.low & 65535) + (d.low & 65535);
-                msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (d.low >>> 16) + (lsw >>> 16);
-                low = (msw & 65535) << 16 | lsw & 65535;
-
-                lsw = (a.high & 65535) + (b.high & 65535) + (c.high & 65535) + (d.high & 65535) + (msw >>> 16);
-                msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (d.high >>> 16) + (lsw >>> 16);
-                high = (msw & 65535) << 16 | lsw & 65535;
-
-                return {
-                    high: high,
-                    low: low
-                };
-            }
-        },
-        add5: {
-            value: function add5(a, b, c, dHigh, dLow, e) {
-                var lsw = undefined,
-                    msw = undefined,
-                    low = undefined,
-                    high = undefined;
-
-                lsw = (a.low & 65535) + (b.low & 65535) + (c.low & 65535) + (dLow & 65535) + (e.low & 65535);
-                msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (dLow >>> 16) + (e.low >>> 16) + (lsw >>> 16);
-                low = (msw & 65535) << 16 | lsw & 65535;
-
-                lsw = (a.high & 65535) + (b.high & 65535) + (c.high & 65535) + (dHigh & 65535) + (e.high & 65535) + (msw >>> 16);
-                msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (dHigh >>> 16) + (e.high >>> 16) + (lsw >>> 16);
-                high = (msw & 65535) << 16 | lsw & 65535;
-
-                return {
-                    high: high,
-                    low: low
-                };
-            }
-        },
-        maj: {
-            value: function maj(x, y, z) {
-                return {
-                    high: x.high & y.high ^ x.high & z.high ^ y.high & z.high,
-                    low: x.low & y.low ^ x.low & z.low ^ y.low & z.low
-                };
-            }
-        },
-        ch: {
-            value: function ch(x, y, z) {
-                return {
-                    high: x.high & y.high ^ ~x.high & z.high,
-                    low: x.low & y.low ^ ~x.low & z.low
-                };
-            }
-        },
-        sigma0: {
-            value: function sigma0(x) {
-                var ROTR28 = SHA512.ROTR(x, 28);
-                var ROTR34 = SHA512.ROTR(x, 34);
-                var ROTR39 = SHA512.ROTR(x, 39);
-
-                return {
-                    high: ROTR28.high ^ ROTR34.high ^ ROTR39.high,
-                    low: ROTR28.low ^ ROTR34.low ^ ROTR39.low
-                };
-            }
-        },
-        sigma1: {
-            value: function sigma1(x) {
-                var ROTR14 = SHA512.ROTR(x, 14);
-                var ROTR18 = SHA512.ROTR(x, 18);
-                var ROTR41 = SHA512.ROTR(x, 41);
-
-                return {
-                    high: ROTR14.high ^ ROTR18.high ^ ROTR41.high,
-                    low: ROTR14.low ^ ROTR18.low ^ ROTR41.low
-                };
-            }
-        },
-        gamma0: {
-            value: function gamma0(x) {
-                var ROTR1 = SHA512.ROTR(x, 1),
-                    ROTR8 = SHA512.ROTR(x, 8),
-                    shr7 = SHA512.SHR(x, 7);
-
-                return {
-                    high: ROTR1.high ^ ROTR8.high ^ shr7.high,
-                    low: ROTR1.low ^ ROTR8.low ^ shr7.low
-                };
-            }
-        },
-        gamma1: {
-            value: function gamma1(x) {
-                var ROTR19 = SHA512.ROTR(x, 19);
-                var ROTR61 = SHA512.ROTR(x, 61);
-                var shr6 = SHA512.SHR(x, 6);
-
-                return {
-                    high: ROTR19.high ^ ROTR61.high ^ shr6.high,
-                    low: ROTR19.low ^ ROTR61.low ^ shr6.low
-                };
-            }
-        },
-        SHR: {
-            value: function SHR(x, n) {
-                if (n <= 32) {
-                    return {
-                        high: x.high >>> n,
-                        low: x.low >>> n | x.high << 32 - n
-                    };
-                } else {
-                    return {
-                        high: 0,
-                        low: x.high << 32 - n
-                    };
+                for (i = 0; i < 8; i += 1) {
+                    hash[2 * i] = H[i].h;
+                    hash[2 * i + 1] = H[i].l;
                 }
+                return hash;
             }
         },
-        ROTR: {
-            value: function ROTR(x, n) {
-                if (n <= 32) {
-                    return {
-                        high: x.high >>> n | x.low << 32 - n,
-                        low: x.low >>> n | x.high << 32 - n
-                    };
-                } else {
-                    return {
-                        high: x.low >>> n | x.high << 32 - n,
-                        low: x.high >>> n | x.low << 32 - n
-                    };
+        arrayToString: {
+            value: function arrayToString(input) {
+                var i = undefined,
+                    l = input.length * 32,
+                    output = "";
+                for (i = 0; i < l; i += 8) {
+                    output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 255);
                 }
+                return output;
             }
         },
-        hex: {
-            value: function hex(string) {
-                var outputString = "",
-                    v = undefined,
-                    i = 7;
-                for (i; i >= 0; i--) {
-                    v = string >>> i * 4 & 15;
-                    outputString += v.toString(16);
+        stringToArray: {
+            value: function stringToArray(input) {
+                var i = undefined,
+                    l = input.length * 8,
+                    output = Array(input.length >> 2),
+                    lo = output.length;
+                for (i = 0; i < lo; i += 1) {
+                    output[i] = 0;
                 }
-                return outputString;
+                for (i = 0; i < l; i += 8) {
+                    output[i >> 5] |= (input.charCodeAt(i / 8) & 255) << 24 - i % 32;
+                }
+                return output;
+            }
+        },
+        stringToHex: {
+            value: function stringToHex(input) {
+                var hex_tab = "0123456789abcdef",
+                    output = "",
+                    x = undefined,
+                    i = 0,
+                    l = input.length;
+                for (; i < l; i += 1) {
+                    x = input.charCodeAt(i);
+                    output += hex_tab.charAt(x >>> 4 & 15) + hex_tab.charAt(x & 15);
+                }
+                return output;
             }
         }
     });

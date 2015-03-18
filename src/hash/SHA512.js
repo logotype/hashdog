@@ -5,246 +5,207 @@
  * Copyright 2015 Victor Norgren
  * Released under the MIT license
  */
+import {Int64} from './Int64';
 export class SHA512 {
 
     static hash(string) {
-        const KH = new Uint32Array([
-            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-            0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-            0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-            0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-            0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-            0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
-            0xca273ece, 0xd186b8c7, 0xeada7dd6, 0xf57d4f7f, 0x06f067aa, 0x0a637dc5, 0x113f9804, 0x1b710b35,
-            0x28db77f5, 0x32caab7b, 0x3c9ebe0a, 0x431d67c4, 0x4cc5d4be, 0x597f299c, 0x5fcb6fab, 0x6c44198c
-        ]);
-        const KL = new Uint32Array([
-            0xd728ae22, 0x23ef65cd, 0xec4d3b2f, 0x8189dbbc, 0xf348b538, 0xb605d019, 0xaf194f9b, 0xda6d8118,
-            0xa3030242, 0x45706fbe, 0x4ee4b28c, 0xd5ffb4e2, 0xf27b896f, 0x3b1696b1, 0x25c71235, 0xcf692694,
-            0x9ef14ad2, 0x384f25e3, 0x8b8cd5b5, 0x77ac9c65, 0x592b0275, 0x6ea6e483, 0xbd41fbd4, 0x831153b5,
-            0xee66dfab, 0x2db43210, 0x98fb213f, 0xbeef0ee4, 0x3da88fc2, 0x930aa725, 0xe003826f, 0x0a0e6e70,
-            0x46d22ffc, 0x5c26c926, 0x5ac42aed, 0x9d95b3df, 0x8baf63de, 0x3c77b2a8, 0x47edaee6, 0x1482353b,
-            0x4cf10364, 0xbc423001, 0xd0f89791, 0x0654be30, 0xd6ef5218, 0x5565a910, 0x5771202a, 0x32bbd1b8,
-            0xb8d2d0c8, 0x5141ab53, 0xdf8eeb99, 0xe19b48a8, 0xc5c95a63, 0xe3418acb, 0x7763e373, 0xd6b2b8a3,
-            0x5defb2fc, 0x43172f60, 0xa1f0ab72, 0x1a6439ec, 0x23631e28, 0xde82bde9, 0xb2c67915, 0xe372532b,
-            0xea26619c, 0x21c0c207, 0xcde0eb1e, 0xee6ed178, 0x72176fba, 0xa2c898a6, 0xbef90dae, 0x131c471b,
-            0x23047d84, 0x40c72493, 0x15c9bebc, 0x9c100d4c, 0xcb3e42b6, 0xfc657e2a, 0x3ad6faec, 0x4a475817
-        ]);
+        return SHA512.stringToHex(SHA512.arrayToString(SHA512.run(SHA512.stringToArray(string), string.length * 8)));
+    }
 
-        let H = [
-                {high: 0x6a09e667, low: 0xf3bcc908}, {high: 0xbb67ae85, low: 0x84caa73b},
-                {high: 0x3c6ef372, low: 0xfe94f82b}, {high: 0xa54ff53a, low: 0x5f1d36f1},
-                {high: 0x510e527f, low: 0xade682d1}, {high: 0x9b05688c, low: 0x2b3e6c1f},
-                {high: 0x1f83d9ab, low: 0xfb41bd6b}, {high: 0x5be0cd19, low: 0x137e2179}
+    static run(input, len) {
+        let K = [
+                new Int64(0x428a2f98, -685199838), new Int64(0x71374491, 0x23ef65cd),
+                new Int64(-1245643825, -330482897), new Int64(-373957723, -2121671748),
+                new Int64(0x3956c25b, -213338824), new Int64(0x59f111f1, -1241133031),
+                new Int64(-1841331548, -1357295717), new Int64(-1424204075, -630357736),
+                new Int64(-670586216, -1560083902), new Int64(0x12835b01, 0x45706fbe),
+                new Int64(0x243185be, 0x4ee4b28c), new Int64(0x550c7dc3, -704662302),
+                new Int64(0x72be5d74, -226784913), new Int64(-2132889090, 0x3b1696b1),
+                new Int64(-1680079193, 0x25c71235), new Int64(-1046744716, -815192428),
+                new Int64(-459576895, -1628353838), new Int64(-272742522, 0x384f25e3),
+                new Int64(0xfc19dc6, -1953704523), new Int64(0x240ca1cc, 0x77ac9c65),
+                new Int64(0x2de92c6f, 0x592b0275), new Int64(0x4a7484aa, 0x6ea6e483),
+                new Int64(0x5cb0a9dc, -1119749164), new Int64(0x76f988da, -2096016459),
+                new Int64(-1740746414, -295247957), new Int64(-1473132947, 0x2db43210),
+                new Int64(-1341970488, -1728372417), new Int64(-1084653625, -1091629340),
+                new Int64(-958395405, 0x3da88fc2), new Int64(-710438585, -1828018395),
+                new Int64(0x6ca6351, -536640913), new Int64(0x14292967, 0xa0e6e70),
+                new Int64(0x27b70a85, 0x46d22ffc), new Int64(0x2e1b2138, 0x5c26c926),
+                new Int64(0x4d2c6dfc, 0x5ac42aed), new Int64(0x53380d13, -1651133473),
+                new Int64(0x650a7354, -1951439906), new Int64(0x766a0abb, 0x3c77b2a8),
+                new Int64(-2117940946, 0x47edaee6), new Int64(-1838011259, 0x1482353b),
+                new Int64(-1564481375, 0x4cf10364), new Int64(-1474664885, -1136513023),
+                new Int64(-1035236496, -789014639), new Int64(-949202525, 0x654be30),
+                new Int64(-778901479, -688958952), new Int64(-694614492, 0x5565a910),
+                new Int64(-200395387, 0x5771202a), new Int64(0x106aa070, 0x32bbd1b8),
+                new Int64(0x19a4c116, -1194143544), new Int64(0x1e376c08, 0x5141ab53),
+                new Int64(0x2748774c, -544281703), new Int64(0x34b0bcb5, -509917016),
+                new Int64(0x391c0cb3, -976659869), new Int64(0x4ed8aa4a, -482243893),
+                new Int64(0x5b9cca4f, 0x7763e373), new Int64(0x682e6ff3, -692930397),
+                new Int64(0x748f82ee, 0x5defb2fc), new Int64(0x78a5636f, 0x43172f60),
+                new Int64(-2067236844, -1578062990), new Int64(-1933114872, 0x1a6439ec),
+                new Int64(-1866530822, 0x23631e28), new Int64(-1538233109, -561857047),
+                new Int64(-1090935817, -1295615723), new Int64(-965641998, -479046869),
+                new Int64(-903397682, -366583396), new Int64(-779700025, 0x21c0c207),
+                new Int64(-354779690, -840897762), new Int64(-176337025, -294727304),
+                new Int64(0x6f067aa, 0x72176fba), new Int64(0xa637dc5, -1563912026),
+                new Int64(0x113f9804, -1090974290), new Int64(0x1b710b35, 0x131c471b),
+                new Int64(0x28db77f5, 0x23047d84), new Int64(0x32caab7b, 0x40c72493),
+                new Int64(0x3c9ebe0a, 0x15c9bebc), new Int64(0x431d67c4, -1676669620),
+                new Int64(0x4cc5d4be, -885112138), new Int64(0x597f299c, -60457430),
+                new Int64(0x5fcb6fab, 0x3ad6faec), new Int64(0x6c44198c, 0x4a475817)
             ],
-            W = [],
-            a, b, c, d, e, f, g, h, i,
-            N, T1, T2,
-            stringLength = string.length * 8,
-            stringArray = new Int32Array(32);
+            j, i, l,
+            T1 = new Int64(0, 0),
+            T2 = new Int64(0, 0),
+            W = Array(80),
+            hash = Array(16),
+            H = [
+                new Int64(0x6a09e667, -205731576),
+                new Int64(-1150833019, -2067093701),
+                new Int64(0x3c6ef372, -23791573),
+                new Int64(-1521486534, 0x5f1d36f1),
+                new Int64(0x510e527f, -1377402159),
+                new Int64(-1694144372, 0x2b3e6c1f),
+                new Int64(0x1f83d9ab, -79577749),
+                new Int64(0x5be0cd19, 0x137e2179)
+            ],
+            a = new Int64(0, 0),
+            b = new Int64(0, 0),
+            c = new Int64(0, 0),
+            d = new Int64(0, 0),
+            e = new Int64(0, 0),
+            f = new Int64(0, 0),
+            g = new Int64(0, 0),
+            h = new Int64(0, 0),
+            s0 = new Int64(0, 0),
+            s1 = new Int64(0, 0),
+            Ch = new Int64(0, 0),
+            Maj = new Int64(0, 0),
+            r1 = new Int64(0, 0),
+            r2 = new Int64(0, 0),
+            r3 = new Int64(0, 0);
 
-        for (i = 0; i < stringLength; i += 8) {
-            stringArray[i >> 5] |= (string.charCodeAt(i / 8) & ((1 << 8) - 1)) << (32 - 8 - (i % 32));
+        // W.fill(new Int64(0, 0)); didn't work
+        for (i = 0; i < 80; i += 1) {
+            W[i] = new Int64(0, 0);
         }
 
-        stringArray[stringLength >> 5] |= 0x80 << (24 - stringLength % 32);
-        stringArray[(((stringLength + 128) >> 10) << 5) + 31] = stringLength;
-        string = stringArray;
-        N = string.length;
+        input[len >> 5] |= 0x80 << (24 - (len & 0x1f));
+        input[((len + 128 >> 10) << 5) + 31] = len;
+        l = input.length;
 
-        for (i = 0; i < N; i += 32) {
-            W = [];
-            a = H[0];
-            b = H[1];
-            c = H[2];
-            d = H[3];
-            e = H[4];
-            f = H[5];
-            g = H[6];
-            h = H[7];
+        for (i = 0; i < l; i += 32) {
+            Int64.copy(a, H[0]);
+            Int64.copy(b, H[1]);
+            Int64.copy(c, H[2]);
+            Int64.copy(d, H[3]);
+            Int64.copy(e, H[4]);
+            Int64.copy(f, H[5]);
+            Int64.copy(g, H[6]);
+            Int64.copy(h, H[7]);
 
-            for (let t = 0; t < 80; t++) {
-                if (t < 16) {
-                    W[t] = {
-                        high: string[t * 2 + i],
-                        low: string[t * 2 + i + 1]
-                    };
-                } else {
-                    W[t] = SHA512.add4(SHA512.gamma1(W[t - 2]), W[t - 7], SHA512.gamma0(W[t - 15]), W[t - 16]);
-                }
-
-                T1 = SHA512.add5(h, SHA512.sigma1(e), SHA512.ch(e, f, g), KH[t], KL[t], W[t]);
-                T2 = SHA512.add2(SHA512.sigma0(a), SHA512.maj(a, b, c));
-                h = g;
-                g = f;
-                f = e;
-                e = SHA512.add2(d, T1);
-                d = c;
-                c = b;
-                b = a;
-                a = SHA512.add2(T1, T2);
+            for (j = 0; j < 16; j += 1) {
+                W[j].h = input[i + 2 * j];
+                W[j].l = input[i + 2 * j + 1];
             }
 
-            H[0] = SHA512.add2(a, H[0]);
-            H[1] = SHA512.add2(b, H[1]);
-            H[2] = SHA512.add2(c, H[2]);
-            H[3] = SHA512.add2(d, H[3]);
-            H[4] = SHA512.add2(e, H[4]);
-            H[5] = SHA512.add2(f, H[5]);
-            H[6] = SHA512.add2(g, H[6]);
-            H[7] = SHA512.add2(h, H[7]);
+            for (j = 16; j < 80; j += 1) {
+                Int64.rotr(r1, W[j - 2], 19);
+                Int64.rotl(r2, W[j - 2], 29);
+                Int64.shr(r3, W[j - 2], 6);
+                s1.l = r1.l ^ r2.l ^ r3.l;
+                s1.h = r1.h ^ r2.h ^ r3.h;
+
+                Int64.rotr(r1, W[j - 15], 1);
+                Int64.rotr(r2, W[j - 15], 8);
+                Int64.shr(r3, W[j - 15], 7);
+                s0.l = r1.l ^ r2.l ^ r3.l;
+                s0.h = r1.h ^ r2.h ^ r3.h;
+
+                Int64.add4(W[j], s1, W[j - 7], s0, W[j - 16]);
+            }
+
+            for (j = 0; j < 80; j += 1) {
+                Ch.l = (e.l & f.l) ^ (~e.l & g.l);
+                Ch.h = (e.h & f.h) ^ (~e.h & g.h);
+
+                Int64.rotr(r1, e, 14);
+                Int64.rotr(r2, e, 18);
+                Int64.rotl(r3, e, 9);
+                s1.l = r1.l ^ r2.l ^ r3.l;
+                s1.h = r1.h ^ r2.h ^ r3.h;
+
+                Int64.rotr(r1, a, 28);
+                Int64.rotl(r2, a, 2);
+                Int64.rotl(r3, a, 7);
+                s0.l = r1.l ^ r2.l ^ r3.l;
+                s0.h = r1.h ^ r2.h ^ r3.h;
+
+                Maj.l = (a.l & b.l) ^ (a.l & c.l) ^ (b.l & c.l);
+                Maj.h = (a.h & b.h) ^ (a.h & c.h) ^ (b.h & c.h);
+
+                Int64.add5(T1, h, s1, Ch, K[j], W[j]);
+                Int64.add(T2, s0, Maj);
+
+                Int64.copy(h, g);
+                Int64.copy(g, f);
+                Int64.copy(f, e);
+                Int64.add(e, d, T1);
+                Int64.copy(d, c);
+                Int64.copy(c, b);
+                Int64.copy(b, a);
+                Int64.add(a, T1, T2);
+            }
+
+            Int64.add(H[0], H[0], a);
+            Int64.add(H[1], H[1], b);
+            Int64.add(H[2], H[2], c);
+            Int64.add(H[3], H[3], d);
+            Int64.add(H[4], H[4], e);
+            Int64.add(H[5], H[5], f);
+            Int64.add(H[6], H[6], g);
+            Int64.add(H[7], H[7], h);
         }
 
-        return SHA512.hex(H[0].high) + SHA512.hex(H[0].low) + SHA512.hex(H[1].high) + SHA512.hex(H[1].low) + SHA512.hex(H[2].high) + SHA512.hex(H[2].low) + SHA512.hex(H[3].high) + SHA512.hex(H[3].low) + SHA512.hex(H[4].high) + SHA512.hex(H[4].low) + SHA512.hex(H[5].high) + SHA512.hex(H[5].low) + SHA512.hex(H[6].high) + SHA512.hex(H[6].low) + SHA512.hex(H[7].high) + SHA512.hex(H[7].low);
-    }
-
-    static add2(x, y) {
-        let lsw, msw, low, high;
-
-        lsw = (x.low & 0xFFFF) + (y.low & 0xFFFF);
-        msw = (x.low >>> 16) + (y.low >>> 16) + (lsw >>> 16);
-        low = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        lsw = (x.high & 0xFFFF) + (y.high & 0xFFFF) + (msw >>> 16);
-        msw = (x.high >>> 16) + (y.high >>> 16) + (lsw >>> 16);
-        high = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        return {
-            high: high,
-            low: low
-        };
-    }
-
-    static add4(a, b, c, d) {
-        let lsw, msw, low, high;
-
-        lsw = (a.low & 0xFFFF) + (b.low & 0xFFFF) + (c.low & 0xFFFF) + (d.low & 0xFFFF);
-        msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (d.low >>> 16) + (lsw >>> 16);
-        low = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        lsw = (a.high & 0xFFFF) + (b.high & 0xFFFF) + (c.high & 0xFFFF) + (d.high & 0xFFFF) + (msw >>> 16);
-        msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (d.high >>> 16) + (lsw >>> 16);
-        high = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        return {
-            high: high,
-            low: low
-        };
-    }
-
-    static add5(a, b, c, dHigh, dLow, e) {
-        let lsw, msw, low, high;
-
-        lsw = (a.low & 0xFFFF) + (b.low & 0xFFFF) + (c.low & 0xFFFF) + (dLow & 0xFFFF) + (e.low & 0xFFFF);
-        msw = (a.low >>> 16) + (b.low >>> 16) + (c.low >>> 16) + (dLow >>> 16) + (e.low >>> 16) + (lsw >>> 16);
-        low = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        lsw = (a.high & 0xFFFF) + (b.high & 0xFFFF) + (c.high & 0xFFFF) + (dHigh & 0xFFFF) + (e.high & 0xFFFF) + (msw >>> 16);
-        msw = (a.high >>> 16) + (b.high >>> 16) + (c.high >>> 16) + (dHigh >>> 16) + (e.high >>> 16) + (lsw >>> 16);
-        high = ((msw & 0xFFFF) << 16) | (lsw & 0xFFFF);
-
-        return {
-            high: high,
-            low: low
-        };
-    }
-
-    static maj(x, y, z) {
-        return {
-            high: (x.high & y.high) ^ (x.high & z.high) ^ (y.high & z.high),
-            low: (x.low & y.low) ^ (x.low & z.low) ^ (y.low & z.low)
-        };
-    }
-
-    static ch(x, y, z) {
-        return {
-            high: (x.high & y.high) ^ (~x.high & z.high),
-            low: (x.low & y.low) ^ (~x.low & z.low)
-        };
-    }
-
-    static sigma0(x) {
-        let ROTR28 = SHA512.ROTR(x, 28);
-        let ROTR34 = SHA512.ROTR(x, 34);
-        let ROTR39 = SHA512.ROTR(x, 39);
-
-        return {
-            high: ROTR28.high ^ ROTR34.high ^ ROTR39.high,
-            low: ROTR28.low ^ ROTR34.low ^ ROTR39.low
-        };
-    }
-
-    static sigma1(x) {
-        let ROTR14 = SHA512.ROTR(x, 14);
-        let ROTR18 = SHA512.ROTR(x, 18);
-        let ROTR41 = SHA512.ROTR(x, 41);
-
-        return {
-            high: ROTR14.high ^ ROTR18.high ^ ROTR41.high,
-            low: ROTR14.low ^ ROTR18.low ^ ROTR41.low
-        };
-    }
-
-    static gamma0(x) {
-        let ROTR1 = SHA512.ROTR(x, 1),
-            ROTR8 = SHA512.ROTR(x, 8),
-            shr7 = SHA512.SHR(x, 7);
-
-        return {
-            high: ROTR1.high ^ ROTR8.high ^ shr7.high,
-            low: ROTR1.low ^ ROTR8.low ^ shr7.low
-        };
-    }
-
-    static gamma1(x) {
-        let ROTR19 = SHA512.ROTR(x, 19);
-        let ROTR61 = SHA512.ROTR(x, 61);
-        let shr6 = SHA512.SHR(x, 6);
-
-        return {
-            high: ROTR19.high ^ ROTR61.high ^ shr6.high,
-            low: ROTR19.low ^ ROTR61.low ^ shr6.low
-        };
-    }
-
-    static SHR(x, n) {
-        if (n <= 32) {
-            return {
-                high: x.high >>> n,
-                low: x.low >>> n | (x.high << (32 - n))
-            };
-        } else {
-            return {
-                high: 0,
-                low: x.high << (32 - n)
-            };
+        for (i = 0; i < 8; i += 1) {
+            hash[2 * i] = H[i].h;
+            hash[2 * i + 1] = H[i].l;
         }
+        return hash;
     }
 
-    static ROTR(x, n) {
-        if (n <= 32) {
-            return {
-                high: (x.high >>> n) | (x.low << (32 - n)),
-                low: (x.low >>> n) | (x.high << (32 - n))
-            };
-        } else {
-            return {
-                high: (x.low >>> n) | (x.high << (32 - n)),
-                low: (x.high >>> n) | (x.low << (32 - n))
-            };
+    static arrayToString(input) {
+        let i, l = input.length * 32,
+            output = '';
+        for (i = 0; i < l; i += 8) {
+            output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
         }
+        return output;
     }
 
-    static hex(string) {
-        let outputString = '',
-            v,
-            i = 7;
-        for (i; i >= 0; i--) {
-            v = (string >>> (i * 4)) & 0xf;
-            outputString += v.toString(16);
+    static stringToArray(input) {
+        let i, l = input.length * 8,
+            output = Array(input.length >> 2),
+            lo = output.length;
+        for (i = 0; i < lo; i += 1) {
+            output[i] = 0;
         }
-        return outputString;
+        for (i = 0; i < l; i += 8) {
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
+        }
+        return output;
+    }
+
+    static stringToHex(input) {
+        let hex_tab = '0123456789abcdef',
+            output = '',
+            x, i = 0,
+            l = input.length;
+        for (; i < l; i += 1) {
+            x = input.charCodeAt(i);
+            output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
+        }
+        return output;
     }
 }

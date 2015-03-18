@@ -137,13 +137,13 @@ var SHA256 = exports.SHA256 = (function () {
                 return output;
             }
         },
-        ROTL: {
-            value: function ROTL(X, n) {
+        rotl: {
+            value: function rotl(X, n) {
                 return X >>> n | X << 32 - n;
             }
         },
-        ROTR: {
-            value: function ROTR(X, n) {
+        rotr: {
+            value: function rotr(X, n) {
                 return X >>> n;
             }
         },
@@ -159,22 +159,22 @@ var SHA256 = exports.SHA256 = (function () {
         },
         sigma0256: {
             value: function sigma0256(x) {
-                return SHA256.ROTL(x, 2) ^ SHA256.ROTL(x, 13) ^ SHA256.ROTL(x, 22);
+                return SHA256.rotl(x, 2) ^ SHA256.rotl(x, 13) ^ SHA256.rotl(x, 22);
             }
         },
         sigma1256: {
             value: function sigma1256(x) {
-                return SHA256.ROTL(x, 6) ^ SHA256.ROTL(x, 11) ^ SHA256.ROTL(x, 25);
+                return SHA256.rotl(x, 6) ^ SHA256.rotl(x, 11) ^ SHA256.rotl(x, 25);
             }
         },
         gamma0256: {
             value: function gamma0256(x) {
-                return SHA256.ROTL(x, 7) ^ SHA256.ROTL(x, 18) ^ SHA256.ROTR(x, 3);
+                return SHA256.rotl(x, 7) ^ SHA256.rotl(x, 18) ^ SHA256.rotr(x, 3);
             }
         },
         gamma1256: {
             value: function gamma1256(x) {
-                return SHA256.ROTL(x, 17) ^ SHA256.ROTL(x, 19) ^ SHA256.ROTR(x, 10);
+                return SHA256.rotl(x, 17) ^ SHA256.rotl(x, 19) ^ SHA256.rotr(x, 10);
             }
         },
         add: {

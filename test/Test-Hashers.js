@@ -5,7 +5,7 @@ import {SHA512} from './../src/hash/SHA512';
 var assert = require('assert');
 
 describe('Hashers', () => {
-    /*describe('MD5', () => {
+    describe('MD5', () => {
         describe('#hash', () => {
             it('should return hash for a empty string', () => {
                 assert.equal('d41d8cd98f00b204e9800998ecf8427e', MD5.hash(''));
@@ -36,7 +36,7 @@ describe('Hashers', () => {
                 assert.equal(hash.length, 32);
             });
         });
-    });*/
+    });
     describe('SHA1', () => {
         describe('#hash', () => {
             it('should return hash for a empty string', () => {
@@ -124,9 +124,9 @@ describe('Hashers', () => {
             it('should return hash for strings containing only numbers (80 characters)', () => {
                 assert.equal('72ec1ef1124a45b047e8b7c75a932195135bb61de24ec0d1914042246e0aec3a2354e093d76f3048b456764346900cb130d2a4fd5dd16abb5e30bcb850dee843', SHA512.hash('12345678901234567890123456789012345678901234567890123456789012345678901234567890'));
             });
-            //it('should return hash for strings containing only numbers (160 characters)', () => {
-            //    assert.equal('72bf79456740d55c96ad9301a353d6f821910ae3b2e9b2f40220630d4fc61c2c2d8ce3fa42a2fb744b39d59f08ba5f3678972b20a1c7ae5061d4919f1b1b0234', SHA512.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
-            //});
+            it('should return hash for strings containing only numbers (160 characters)', () => {
+                assert.equal('72bf79456740d55c96ad9301a353d6f821910ae3b2e9b2f40220630d4fc61c2c2d8ce3fa42a2fb744b39d59f08ba5f3678972b20a1c7ae5061d4919f1b1b0234', SHA512.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
+            });
             it('should return a hash with length 128 characters', () => {
                 let hash = SHA512.hash('cryptographic hash function');
                 assert.equal(hash.length, 128);

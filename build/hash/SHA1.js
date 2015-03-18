@@ -57,12 +57,12 @@ var SHA1 = exports.SHA1 = (function () {
                         if (j < 16) {
                             w[j] = input[i + j];
                         } else {
-                            w[j] = SHA1.ROTL(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+                            w[j] = SHA1.rotl(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
                         }
-                        t = SHA1.add(SHA1.add(SHA1.ROTL(a, 5), SHA1.chMajPty(j, b, c, d)), SHA1.add(SHA1.add(e, w[j]), SHA1.cnst(j)));
+                        t = SHA1.add(SHA1.add(SHA1.rotl(a, 5), SHA1.chMajPty(j, b, c, d)), SHA1.add(SHA1.add(e, w[j]), SHA1.cnst(j)));
                         e = d;
                         d = c;
-                        c = SHA1.ROTL(b, 30);
+                        c = SHA1.rotl(b, 30);
                         b = a;
                         a = t;
                     }
@@ -135,8 +135,8 @@ var SHA1 = exports.SHA1 = (function () {
                 return t < 20 ? 1518500249 : t < 40 ? 1859775393 : t < 60 ? -1894007588 : -899497514;
             }
         },
-        ROTL: {
-            value: function ROTL(x, n) {
+        rotl: {
+            value: function rotl(x, n) {
                 return x << n | x >>> 32 - n;
             }
         },
