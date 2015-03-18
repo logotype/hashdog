@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - "iojs"
 before_install: npm install -g gulp-cli
-script: gulp
+script: gulp --silent

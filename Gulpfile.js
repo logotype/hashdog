@@ -14,33 +14,25 @@ var gulp = require('gulp'),
     mocha = require('gulp-mocha'),
     $ = require('gulp-load-plugins')();
 
-gulp.task('jshint', function () {
-    return gulp.src('./src/**/*.js')
+gulp.task('build:library', function() {
+    del(['build/**']);
+    return gulp.src(['./src/**/*.js', '!./src/hashdog-cli.js'])
         .pipe($.jshint({'esnext': true}))
-        .pipe($.jshint.reporter('default'));
-});
-
-gulp.task('clean:build', function (cb) {
-    return del(['build/**'], cb);
-});
-
-gulp.task('clean:cli', ['cli'], function (cb) {
-    return del(['build/hashdog-cli.js'], cb);
-});
-
-gulp.task('transpile', ['clean:build'], function() {
-    return gulp.src('./src/**/*.js')
+        .pipe($.jshint.reporter('default'))
         .pipe($.babel())
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('cli', ['transpile'], function() {
-    return gulp.src('./build/hashdog-cli.js')
+gulp.task('build:cli', ['build:library'], function() {
+    return gulp.src('./src/hashdog-cli.js')
+        .pipe($.jshint({'esnext': true}))
+        .pipe($.jshint.reporter('default'))
+        .pipe($.babel())
         .pipe(chmod(755))
         .pipe(gulp.dest('./bin'));
 });
 
-gulp.task('test', ['clean:cli'], function () {
+gulp.task('test', ['build:cli'], function () {
     return gulp.src('./test/**/*.js', {read: false})
         .pipe($.mocha({
             recursive: true,
@@ -55,4 +47,4 @@ gulp.task('perf', function () {
         .pipe(gulp.dest('./perfbuild'));
 });
 
-gulp.task('default', ['jshint', 'clean:build', 'transpile', 'cli', 'clean:cli', 'test']);
+gulp.task('default', ['build:library', 'build:cli', 'test']);

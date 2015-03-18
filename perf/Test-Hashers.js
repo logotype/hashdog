@@ -7,7 +7,13 @@ import {Util} from './../build/util/Util';
 Util.cls();
 console.log('Running performance tests...');
 
-let i, length = 100000, startDate, dateDiff, rate;
+let i, length = 1000000, startDate, dateDiff, rate;
+
+// 1st allocation
+MD5.hash('allocate');
+SHA1.hash('allocate');
+SHA256.hash('allocate');
+SHA512.hash('allocate');
 
 i = 0;
 startDate = new Date();
