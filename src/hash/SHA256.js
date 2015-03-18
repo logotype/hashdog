@@ -8,6 +8,11 @@
 export class SHA256 {
 
     static hash(string) {
+        return SHA256.stringToHex(SHA256.arrayToString(SHA256.run(SHA256.stringToArray(string), string.length * 8)));
+    }
+
+    static run(input, len) {
+
         const K = new Uint32Array([
             0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
             0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -19,17 +24,17 @@ export class SHA256 {
             0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
         ]);
 
-        let H0 = 0x6a09e667,
-            H1 = 0xbb67ae85,
-            H2 = 0x3c6ef372,
-            H3 = 0xa54ff53a,
-            H4 = 0x510e527f,
-            H5 = 0x9b05688c,
-            H6 = 0x1f83d9ab,
-            H7 = 0x5be0cd19,
-            M = [],
-            W = new Int32Array(64),
-            N, i, j, T1, T2,
+        let i, j,
+            T1, T2,
+            W = Array(64),
+            H0 = 1779033703,
+            H1 = -1150833019,
+            H2 = 1013904242,
+            H3 = -1521486534,
+            H4 = 1359893119,
+            H5 = -1694144372,
+            H6 = 528734635,
+            H7 = 1541459225,
             a = H0,
             b = H1,
             c = H2,
@@ -39,103 +44,112 @@ export class SHA256 {
             g = H6,
             h = H7;
 
-        string += String.fromCharCode(0x80);
-        N = Math.ceil((string.length / 4 + 2) / 16);
+        input[len >> 5] |= 0x80 << (24 - len % 32);
+        input[((len + 64 >> 9) << 4) + 15] = len;
 
-        for (i = 0; i < N; i++) {
-            M[i] = new Int32Array(16);
-            for (j = 0; j < 16; j++) {
-                M[i][j] = (string.charCodeAt(i * 64 + j * 4) << 24) |
-                (string.charCodeAt(i * 64 + j * 4 + 1) << 16) |
-                (string.charCodeAt(i * 64 + j * 4 + 2) << 8) |
-                (string.charCodeAt(i * 64 + j * 4 + 3));
-            }
-        }
+        for (i = 0; i < input.length; i += 16) {
+            H0 = a;
+            H1 = b;
+            H2 = c;
+            H3 = d;
+            H4 = e;
+            H5 = f;
+            H6 = g;
+            H7 = h;
 
-        M[N - 1][14] = ((string.length - 1) * 8) / Math.pow(2, 32);
-        M[N - 1][14] = Math.floor(M[N - 1][14]);
-        M[N - 1][15] = ((string.length - 1) * 8) & 0xffffffff;
-
-        for (i = 0; i < N; i++) {
-
-            W = new Int32Array(64);
-            a = H0;
-            b = H1;
-            c = H2;
-            d = H3;
-            e = H4;
-            f = H5;
-            g = H6;
-            h = H7;
-
-            for (let t = 0; t < 64; t++) {
-                if(t < 16) {
-                    W[t] = M[i][t];
+            for (j = 0; j < 64; j += 1) {
+                if (j < 16) {
+                    W[j] = input[j + i];
                 } else {
-                    W[t] = (SHA256.sigma1(W[t - 2]) + W[t - 7] + SHA256.sigma0(W[t - 15]) + W[t - 16]) & 0xffffffff;
+                    W[j] = SHA256.add(SHA256.add(SHA256.add(SHA256.gamma1256(W[j - 2]), W[j - 7]), SHA256.gamma0256(W[j - 15])), W[j - 16]);
                 }
 
-                T1 = h + SHA256.gamma1(e) + SHA256.add4(e, f, g) + K[t] + W[t];
-                T2 = SHA256.gamma0(a) + SHA256.add5(a, b, c);
+                T1 = SHA256.add(SHA256.add(SHA256.add(SHA256.add(h, SHA256.sigma1256(e)), SHA256.ch(e, f, g)), K[j]), W[j]);
+                T2 = SHA256.add(SHA256.sigma0256(a), SHA256.maj(a, b, c));
                 h = g;
                 g = f;
                 f = e;
-                e = (d + T1) & 0xffffffff;
+                e = SHA256.add(d, T1);
                 d = c;
                 c = b;
                 b = a;
-                a = (T1 + T2) & 0xffffffff;
+                a = SHA256.add(T1, T2);
             }
 
-            H0 = (H0 + a) & 0xffffffff;
-            H1 = (H1 + b) & 0xffffffff;
-            H2 = (H2 + c) & 0xffffffff;
-            H3 = (H3 + d) & 0xffffffff;
-            H4 = (H4 + e) & 0xffffffff;
-            H5 = (H5 + f) & 0xffffffff;
-            H6 = (H6 + g) & 0xffffffff;
-            H7 = (H7 + h) & 0xffffffff;
+            a = SHA256.add(a, H0);
+            b = SHA256.add(b, H1);
+            c = SHA256.add(c, H2);
+            d = SHA256.add(d, H3);
+            e = SHA256.add(e, H4);
+            f = SHA256.add(f, H5);
+            g = SHA256.add(g, H6);
+            h = SHA256.add(h, H7);
         }
-
-        return SHA256.hex(H0) + SHA256.hex(H1) + SHA256.hex(H2) + SHA256.hex(H3) + SHA256.hex(H4) + SHA256.hex(H5) + SHA256.hex(H6) + SHA256.hex(H7);
+        return Array(a, b, c, d, e, f, g, h);
     }
 
-    static gamma0(x) {
-        return SHA256.ROTR(2, x) ^ SHA256.ROTR(13, x) ^ SHA256.ROTR(22, x);
-    }
-
-    static gamma1(x) {
-        return SHA256.ROTR(6, x) ^ SHA256.ROTR(11, x) ^ SHA256.ROTR(25, x);
-    }
-
-    static sigma0(x) {
-        return SHA256.ROTR(7, x) ^ SHA256.ROTR(18, x) ^ (x >>> 3);
-    }
-
-    static sigma1(x) {
-        return SHA256.ROTR(17, x) ^ SHA256.ROTR(19, x) ^ (x >>> 10);
-    }
-
-    static add4(x, y, z) {
-        return (x & y) ^ (~x & z);
-    }
-
-    static add5(x, y, z) {
-        return (x & y) ^ (x & z) ^ (y & z);
-    }
-
-    static ROTR(n, x) {
-        return (x >>> n) | (x << (32 - n));
-    }
-
-    static hex(string) {
-        let outputString = '',
-            v,
-            i = 7;
-        for (i; i >= 0; i--) {
-            v = (string >>> (i * 4)) & 0xf;
-            outputString += v.toString(16);
+    static arrayToString(input) {
+        let i, l = input.length * 32, output = '';
+        for (i = 0; i < l; i += 8) {
+            output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
         }
-        return outputString;
+        return output;
+    }
+
+    static stringToArray(input) {
+        let i, l = input.length * 8, output = Array(input.length >> 2), lo = output.length;
+        for (i = 0; i < lo; i += 1) {
+            output[i] = 0;
+        }
+        for (i = 0; i < l; i += 8) {
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
+        }
+        return output;
+    }
+
+    static stringToHex(input) {
+        let hex_tab = '0123456789abcdef', output = '', x, i = 0, l = input.length;
+        for (; i < l; i += 1) {
+            x = input.charCodeAt(i);
+            output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
+        }
+        return output;
+    }
+
+    static ROTL(X, n) {
+        return (X >>> n) | (X << (32 - n));
+    }
+
+    static ROTR(X, n) {
+        return (X >>> n);
+    }
+
+    static ch(x, y, z) {
+        return ((x & y) ^ ((~x) & z));
+    }
+
+    static maj(x, y, z) {
+        return ((x & y) ^ (x & z) ^ (y & z));
+    }
+
+    static sigma0256(x) {
+        return (SHA256.ROTL(x, 2) ^ SHA256.ROTL(x, 13) ^ SHA256.ROTL(x, 22));
+    }
+
+    static sigma1256(x) {
+        return (SHA256.ROTL(x, 6) ^ SHA256.ROTL(x, 11) ^ SHA256.ROTL(x, 25));
+    }
+
+    static gamma0256(x) {
+        return (SHA256.ROTL(x, 7) ^ SHA256.ROTL(x, 18) ^ SHA256.ROTR(x, 3));
+    }
+
+    static gamma1256(x) {
+        return (SHA256.ROTL(x, 17) ^ SHA256.ROTL(x, 19) ^ SHA256.ROTR(x, 10));
+    }
+
+    static add(x, y) {
+        let lsw = (x & 0xFFFF) + (y & 0xFFFF), msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
     }
 }
