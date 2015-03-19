@@ -28,10 +28,9 @@ var SHA1 = exports.SHA1 = (function () {
         },
         run: {
             value: function run(input, len) {
-                var i = undefined,
-                    j = undefined,
-                    t = undefined,
-                    w = Array(80),
+                var i = 0,
+                    l = (len + 64 >> 9 << 4) + 15,
+                    W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     H0 = 1732584193,
                     H1 = -271733879,
                     H2 = -1732584194,
@@ -44,22 +43,25 @@ var SHA1 = exports.SHA1 = (function () {
                     e = H4;
 
                 input[len >> 5] |= 128 << 24 - len % 32;
-                input[(len + 64 >> 9 << 4) + 15] = len;
+                input[l] = len;
 
-                for (i = 0; i < input.length; i += 16) {
+                for (; i < l; i += 16) {
                     H0 = a;
                     H1 = b;
                     H2 = c;
                     H3 = d;
                     H4 = e;
 
-                    for (j = 0; j < 80; j += 1) {
+                    var j = 0,
+                        t = undefined;
+
+                    for (; j < 80; j += 1) {
                         if (j < 16) {
-                            w[j] = input[i + j];
+                            W[j] = input[i + j];
                         } else {
-                            w[j] = SHA1.rotl(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+                            W[j] = SHA1.rotl(W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16], 1);
                         }
-                        t = SHA1.add(SHA1.add(SHA1.rotl(a, 5), SHA1.chMajPty(j, b, c, d)), SHA1.add(SHA1.add(e, w[j]), SHA1.cnst(j)));
+                        t = SHA1.add(SHA1.add(SHA1.rotl(a, 5), SHA1.chMajPty(j, b, c, d)), SHA1.add(SHA1.add(e, W[j]), SHA1.cnst(j)));
                         e = d;
                         d = c;
                         c = SHA1.rotl(b, 30);
@@ -73,7 +75,8 @@ var SHA1 = exports.SHA1 = (function () {
                     d = SHA1.add(d, H3);
                     e = SHA1.add(e, H4);
                 }
-                return Array(a, b, c, d, e);
+
+                return [a, b, c, d, e];
             }
         },
         arrayToString: {

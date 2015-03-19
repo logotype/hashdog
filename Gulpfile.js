@@ -47,4 +47,4 @@ gulp.task('perf', function () {
         .pipe(gulp.dest('./perfbuild'));
 });
 
-gulp.task('default', ['build:library', 'build:cli', 'test']);
+gulp.task('default', ['build:library', 'build:cli', 'test', 'perf']);
