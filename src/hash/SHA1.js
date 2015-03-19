@@ -62,8 +62,8 @@ export class SHA1 {
     }
 
     static arrayToString(input) {
-        let i, l = input.length * 32, output = '';
-        for (i = 0; i < l; i += 8) {
+        let i = 0, l = input.length * 32, output = '';
+        for (; i < l; i += 8) {
             output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
         }
         return output;

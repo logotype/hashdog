@@ -65,12 +65,16 @@ export class Wordlist extends BaseWorker {
                 process.exit(0);
                 break;
             }
-            if (i > 0 && i % 100000 === 0) {
+
+            currentDate = new Date();
+            dateDiff = currentDate - this.lastDate;
+
+            if (dateDiff >= this.refreshRate) {
                 currentDate = new Date();
                 dateDiff = currentDate - this.lastDate;
                 triesDiff = i - this.lastTries;
                 percentage = ((i / wordArray.length) * 100).toFixed(2);
-                rate = triesDiff * (1000 / dateDiff) / 1000;
+                rate = (triesDiff / (dateDiff / 1000)) / 1000;
 
                 this.data.status = 'Working';
                 this.data.success = false;

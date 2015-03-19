@@ -128,7 +128,6 @@ var Permutator = exports.Permutator = (function (_BaseWorker) {
                         this.lastPermutations = this.permutations;
                         this.lastDate = currentDate;
                     }
-
                     this.permutations++;
                 } else {
                     for (j = 0; j < this.options.chars.length; j++) {

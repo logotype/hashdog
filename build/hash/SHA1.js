@@ -81,10 +81,10 @@ var SHA1 = exports.SHA1 = (function () {
         },
         arrayToString: {
             value: function arrayToString(input) {
-                var i = undefined,
+                var i = 0,
                     l = input.length * 32,
                     output = "";
-                for (i = 0; i < l; i += 8) {
+                for (; i < l; i += 8) {
                     output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 255);
                 }
                 return output;

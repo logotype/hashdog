@@ -133,7 +133,7 @@ export class HashDog extends EventEmitter {
 
     display(data) {
         let self = this,
-            endDate,
+            currentDate = new Date(),
             dateDiff,
             didSucceed = false,
             secret = '',
@@ -177,11 +177,10 @@ export class HashDog extends EventEmitter {
         });
 
         if (didSucceed) {
-            endDate = new Date();
-            dateDiff = endDate - this.startDate;
+            dateDiff = currentDate - this.startDate;
             console.log('----------------------------------------------------------------------');
             console.log('Started................: ' + this.startDate.toUTCString());
-            console.log('Ended..................: ' + endDate.toUTCString());
+            console.log('Ended..................: ' + currentDate.toUTCString());
             console.log('The process took ' + (dateDiff / 1000).toFixed(2) + ' seconds.');
             console.log(this.match + ' : ' + colors.green(secret));
             process.exit(0);

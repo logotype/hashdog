@@ -156,7 +156,7 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
         display: {
             value: function display(data) {
                 var self = this,
-                    endDate = undefined,
+                    currentDate = new Date(),
                     dateDiff = undefined,
                     didSucceed = false,
                     secret = "",
@@ -200,11 +200,10 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
                 });
 
                 if (didSucceed) {
-                    endDate = new Date();
-                    dateDiff = endDate - this.startDate;
+                    dateDiff = currentDate - this.startDate;
                     console.log("----------------------------------------------------------------------");
                     console.log("Started................: " + this.startDate.toUTCString());
-                    console.log("Ended..................: " + endDate.toUTCString());
+                    console.log("Ended..................: " + currentDate.toUTCString());
                     console.log("The process took " + (dateDiff / 1000).toFixed(2) + " seconds.");
                     console.log(this.match + " : " + colors.green(secret));
                     process.exit(0);
