@@ -6,12 +6,7 @@
  * Released under the MIT license
  */
 var gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
-    babel = require('gulp-babel'),
     del = require('del'),
-    chmod = require('gulp-chmod'),
-    rename = require("gulp-rename"),
-    mocha = require('gulp-mocha'),
     $ = require('gulp-load-plugins')();
 
 gulp.task('build:library', function() {
@@ -28,7 +23,7 @@ gulp.task('build:cli', ['build:library'], function() {
         .pipe($.jshint({'esnext': true}))
         .pipe($.jshint.reporter('default'))
         .pipe($.babel())
-        .pipe(chmod(755))
+        .pipe($.chmod(755))
         .pipe(gulp.dest('./bin'));
 });
 

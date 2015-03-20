@@ -25,7 +25,6 @@
     "gulp-babel": "latest",
     "gulp-mocha": "latest",
     "gulp-jshint": "latest",
-    "gulp-rename": "latest",
     "mocha": "latest",
     "gulp-load-plugins": "latest"
   },

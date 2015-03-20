@@ -1,5 +1,3 @@
-"use strict";
-
 /*!
  * hashdog
  * https://github.com/logotype/hashdog.git
@@ -7,6 +5,8 @@
  * Copyright 2015 Victor Norgren
  * Released under the MIT license
  */
+"use strict";
+
 var stream = require("stream");
 var liner = new stream.Transform({
     objectMode: true
