@@ -32,7 +32,7 @@ var Passwords = exports.Passwords = (function (_BaseWorker) {
 
         this.data.name = "<Dictionary> Passwords";
         this.data.keysTried = 0;
-        this.data.keysTotal = 14342365;
+        this.data.keysTotal = 14344391;
         this.data.thread = "pl";
         this.data.status = "Initializing...";
     }
@@ -59,7 +59,16 @@ var Passwords = exports.Passwords = (function (_BaseWorker) {
 
                 checkFile = fs.createReadStream(join(__dirname, "../../data/data.bin"));
                 checkFile.on("error", function (error) {
-                    fs.createReadStream(join(__dirname, "../../data/data.tar.gz")).on("error", console.log).pipe(zlib.Unzip()).pipe(tar.Parse()).on("entry", function (entry) {
+                    fs.createReadStream(join(__dirname, "../../data/data.tar.gz")).on("error", function (error) {
+                        if (error.code === "EACCES") {
+                            self.data.status = "Please run with sudo. Error when extracting data.";
+                        } else {
+                            self.data.status = error.toString();
+                        }
+                        self.data.uptime = process.uptime().toFixed(2);
+                        self.sendStatus();
+                        process.exit(0);
+                    }).pipe(zlib.Unzip()).pipe(tar.Parse()).on("entry", function (entry) {
                         self.data.status = "Extracting password list";
                         self.data.uptime = process.uptime().toFixed(2);
                         self.sendStatus();

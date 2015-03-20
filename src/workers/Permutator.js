@@ -9,7 +9,6 @@ import {BaseWorker} from './BaseWorker';
 import {Util} from './../util/Util';
 
 export class Permutator extends BaseWorker {
-
     constructor(options) {
         super(options);
 
@@ -27,7 +26,7 @@ export class Permutator extends BaseWorker {
 
         this.options = options;
 
-        if(!this.options.length) {
+        if (!this.options.length) {
             this.options.length = 2;
         } else if (this.options.length >= 16) {
             console.log('Exceeded maximum key length!');
@@ -52,8 +51,8 @@ export class Permutator extends BaseWorker {
         let j, hash, currentDate, dateDiff, permDiff, percentage, rate;
 
         if (n === 0) {
-            if(parseInt(this.permutations) >= (parseInt(this.data.keysTotal) - 1)) {
-                if(this.tryCompleteKeyspace) {
+            if (parseInt(this.permutations) >= (parseInt(this.data.keysTotal) - 1)) {
+                if (this.tryCompleteKeyspace) {
                     this.options.length++;
                     this.initialize(this.options);
                     return;

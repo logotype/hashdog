@@ -12,8 +12,9 @@ export class SHA1 {
     }
 
     static run(input, len) {
-        let i = 0, l = ((len + 64 >> 9) << 4) + 15,
-            W = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        let i = 0,
+            l = ((len + 64 >> 9) << 4) + 15,
+            W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = 1732584193,
             H1 = -271733879,
             H2 = -1732584194,
@@ -35,7 +36,8 @@ export class SHA1 {
             H3 = d;
             H4 = e;
 
-            let j = 0, t;
+            let j = 0,
+                t;
 
             for (; j < 80; j += 1) {
                 if (j < 16) {
@@ -62,7 +64,9 @@ export class SHA1 {
     }
 
     static arrayToString(input) {
-        let i = 0, l = input.length * 32, output = '';
+        let i = 0,
+            l = input.length * 32,
+            output = '';
         for (; i < l; i += 8) {
             output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
         }
@@ -70,7 +74,9 @@ export class SHA1 {
     }
 
     static stringToArray(input) {
-        let i, l = input.length * 8, output = Array(input.length >> 2), lo = output.length;
+        let i, l = input.length * 8,
+            output = Array(input.length >> 2),
+            lo = output.length;
         for (i = 0; i < lo; i += 1) {
             output[i] = 0;
         }
@@ -81,7 +87,10 @@ export class SHA1 {
     }
 
     static stringToHex(input) {
-        let hex_tab = '0123456789abcdef', output = '', x, i = 0, l = input.length;
+        let hex_tab = '0123456789abcdef',
+            output = '',
+            x, i = 0,
+            l = input.length;
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
             output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
@@ -111,7 +120,8 @@ export class SHA1 {
     }
 
     static add(x, y) {
-        let lsw = (x & 0xFFFF) + (y & 0xFFFF), msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        let lsw = (x & 0xFFFF) + (y & 0xFFFF),
+            msw = (x >> 16) + (y >> 16) + (lsw >> 16);
         return (msw << 16) | (lsw & 0xFFFF);
     }
 }

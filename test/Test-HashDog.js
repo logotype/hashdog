@@ -21,13 +21,19 @@ describe('HashDog', () => {
         });
         it('should throw an error when passing incorrect hash', (done) => {
             assert.throws(() => {
-                hashdog = new HashDog({hash:'incorrect', type:'SHA1'});
+                hashdog = new HashDog({
+                    hash: 'incorrect',
+                    type: 'SHA1'
+                });
             }, Error);
             done();
         });
         it('should throw an error when passing incorrect type', (done) => {
             assert.throws(() => {
-                hashdog = new HashDog({hash:'6d86ca3c74636711371637c2d73ec3e48dd1737a', type:'incorrect'});
+                hashdog = new HashDog({
+                    hash: '6d86ca3c74636711371637c2d73ec3e48dd1737a',
+                    type: 'incorrect'
+                });
             }, Error);
             done();
         });

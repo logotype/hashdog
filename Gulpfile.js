@@ -37,7 +37,7 @@ gulp.task('test', ['build:cli'], function () {
         .pipe($.mocha({
             recursive: true,
             compilers: require('babel/register'),
-            reporter: 'spec'
+            reporter: 'dot'
         }));
 });
 

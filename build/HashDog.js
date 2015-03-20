@@ -184,10 +184,8 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
 
                 Object.keys(self.status).forEach(function (key) {
                     if (self.status[key].hasOwnProperty("status")) {
-                        console.log("THREAD " + i + ":");
-                        console.log("  Worker...............: " + self.status[key].name);
+                        console.log("THREAD " + i + ": " + self.status[key].name);
                         console.log("  Status...............: " + colors.yellow(self.status[key].status));
-                        console.log("  Success..............: " + self.status[key].success);
                         console.log("  Uptime...............: " + self.status[key].uptime + " seconds");
                         console.log("  Key length...........: " + Util.numberWithCommas(self.status[key].keyLength));
                         console.log("  Keys (tried).........: " + Util.numberWithCommas(self.status[key].keysTried));

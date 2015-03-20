@@ -3,7 +3,7 @@ import {HashDog} from '../build/hashdog';
 
 process.title = 'hashdog';
 
-var program = require('commander'),
+let program = require('commander'),
     path = require('path'),
     pkg = require(path.join(__dirname, '../package.json')),
     hashDog;
@@ -19,5 +19,11 @@ program
 if (!program.args.length) {
     program.help();
 } else {
-    hashDog = new HashDog({hash: program.args[0], type: program.type, length: program.length, chars: program.chars, environment: 'CLI'});
+    hashDog = new HashDog({
+        hash: program.args[0],
+        type: program.type,
+        length: program.length,
+        chars: program.chars,
+        environment: 'CLI'
+    });
 }

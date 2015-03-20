@@ -8,7 +8,6 @@
 import {BaseWorker} from './BaseWorker';
 
 export class Passwords extends BaseWorker {
-
     constructor(options) {
         super(options);
 
@@ -17,7 +16,7 @@ export class Passwords extends BaseWorker {
 
         this.data.name = '<Dictionary> Passwords';
         this.data.keysTried = 0;
-        this.data.keysTotal = 14342365;
+        this.data.keysTotal = 14344391;
         this.data.thread = 'pl';
         this.data.status = 'Initializing...';
     }
@@ -39,9 +38,18 @@ export class Passwords extends BaseWorker {
         this.sendStatus();
 
         checkFile = fs.createReadStream(join(__dirname, '../../data/data.bin'));
-        checkFile.on('error', function (error) {
+        checkFile.on('error', function(error) {
             fs.createReadStream(join(__dirname, '../../data/data.tar.gz'))
-                .on('error', console.log)
+                .on('error', (error) => {
+                    if (error.code === 'EACCES') {
+                        self.data.status = 'Please run with sudo. Error when extracting data.';
+                    } else {
+                        self.data.status = error.toString();
+                    }
+                    self.data.uptime = process.uptime().toFixed(2);
+                    self.sendStatus();
+                    process.exit(0);
+                })
                 .pipe(zlib.Unzip())
                 .pipe(tar.Parse())
                 .on('entry', (entry) => {
@@ -54,7 +62,7 @@ export class Passwords extends BaseWorker {
                     });
                 });
         });
-        checkFile.on('readable', function () {
+        checkFile.on('readable', function() {
             self.data.status = 'Password list cached';
             self.processList(fullPath);
         });
@@ -94,7 +102,7 @@ export class Passwords extends BaseWorker {
         let hash, currentDate, dateDiff, triesDiff, percentage, rate;
 
         // If a password length is specified, skip if not matching exactly
-        if(this.passwordLength && line.length !== this.passwordLength) {
+        if (this.passwordLength && line.length !== this.passwordLength) {
             return;
         }
 

@@ -9,7 +9,6 @@ import {BaseWorker} from './BaseWorker';
 import {MD5} from './../hash/MD5';
 
 export class Wordlist extends BaseWorker {
-
     constructor(options) {
         super(options);
 
@@ -30,7 +29,7 @@ export class Wordlist extends BaseWorker {
         wordArray = require('../../data/wordlist-english.json').data;
 
         // If a password length is specified, filter the array
-        if(options.length) {
+        if (options.length) {
             wordArray = wordArray.filter((element) => {
                 return element.length === options.length;
             });

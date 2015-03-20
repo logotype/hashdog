@@ -55,7 +55,6 @@ var SHA512 = exports.SHA512 = (function () {
                     r2 = new Int64(0, 0),
                     r3 = new Int64(0, 0);
 
-                // W.fill(new Int64(0, 0)); didn't work
                 for (i = 0; i < 80; i += 1) {
                     W[i] = new Int64(0, 0);
                 }

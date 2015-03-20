@@ -31,7 +31,7 @@ export class BaseWorker {
             string: ''
         };
 
-        switch(options.type.toUpperCase()) {
+        switch (options.type.toUpperCase()) {
             case 'MD5':
                 this.hasher = MD5;
                 break;
