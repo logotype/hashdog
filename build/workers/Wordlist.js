@@ -111,7 +111,7 @@ var Wordlist = exports.Wordlist = (function (_BaseWorker) {
                         this.data.keyLength = wordArray[i].length;
                         this.data.keysTried = i;
                         this.data.keysTotal = wordArray.length;
-                        this.data.rate = rate.toFixed(2);
+                        this.data.rate = rate;
                         this.data.percentage = percentage;
                         this.data.string = currentString;
                         this.sendStatus();

@@ -121,7 +121,7 @@ var Permutator = exports.Permutator = (function (_BaseWorker) {
                         this.data.success = false;
                         this.data.uptime = process.uptime().toFixed(2);
                         this.data.keysTried = this.permutations;
-                        this.data.rate = (rate / 1000).toFixed(2);
+                        this.data.rate = rate / 1000;
                         this.data.percentage = percentage;
                         this.data.string = this.string;
                         this.sendStatus();

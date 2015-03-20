@@ -131,7 +131,7 @@ export class Passwords extends BaseWorker {
             this.data.success = false;
             this.data.uptime = process.uptime().toFixed(2);
             this.data.keyLength = line.length;
-            this.data.rate = rate.toFixed(2);
+            this.data.rate = rate;
             this.data.percentage = percentage;
             this.data.string = line;
             this.sendStatus();

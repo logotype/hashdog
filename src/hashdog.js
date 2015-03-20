@@ -138,6 +138,7 @@ export class HashDog extends EventEmitter {
             didSucceed = false,
             secret = '',
             i = 1,
+            totalRate = 0,
             colors = require('colors/safe');
 
         this.status[data.thread] = data;
@@ -155,8 +156,15 @@ export class HashDog extends EventEmitter {
 
         Util.cls();
 
+        Object.keys(self.status).forEach((key) => {
+            if (self.status[key].hasOwnProperty('status') && (self.status[key].status === 'Working' || self.status[key].status === 'SUCCESS')) {
+                totalRate += self.status[key].rate;
+            }
+        });
+
         console.log('hashdog by @logotype. Copyright © 2015. Released under the MIT license.');
         console.log('Hash: ' + colors.yellow(self.match) + ' type: ' + colors.magenta(self.type) + ' characters: ' + colors.cyan(self.chars));
+        console.log('Current rate combined..: ' + totalRate.toFixed(2) + ' kHash/s');
         console.log('');
 
         Object.keys(self.status).forEach((key) => {
@@ -168,7 +176,7 @@ export class HashDog extends EventEmitter {
                 console.log('  Keys (tried).........: ' + Util.numberWithCommas(self.status[key].keysTried));
                 console.log('  Keys (total).........: ' + Util.numberWithCommas(self.status[key].keysTotal));
                 console.log('  Percentage...........: ' + self.status[key].percentage + '%');
-                console.log('  Rate.................: ' + self.status[key].rate + ' kHash/s');
+                console.log('  Rate.................: ' + self.status[key].rate.toFixed(2) + ' kHash/s');
                 console.log('  String...............: ' + colors.cyan(self.status[key].string));
             }
             i++;

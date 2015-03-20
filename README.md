@@ -34,45 +34,40 @@ Example output:
 ```bash
 hashdog by @logotype. Copyright © 2015. Released under the MIT license.
 Hash: 6d86ca3c74636711371637c2d73ec3e48dd1737a type: SHA1 characters: ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789
+Current rate combined..: 359.47 kHash/s
 
-THREAD 1:
-  Worker...............: <Dictionary> Words
+THREAD 1: <Dictionary> Words
   Status...............: Unsuccessful
-  Success..............: false
-  Uptime...............: 7.79 seconds
+  Uptime...............: 2.92 seconds
   Key length...........: 10
   Keys (tried).........: 235,886
   Keys (total).........: 235,886
   Percentage...........: 100%
-  Rate.................: 32.55 kHash/s
+  Rate.................: 93.36 kHash/s
   String...............:
-THREAD 2:
-  Worker...............: <Dictionary> Passwords
-  Status...............: Unsuccessful
-  Success..............: false
-  Uptime...............: 106.90 seconds
-  Key length...........: 12
-  Keys (tried).........: 14,342,365
-  Keys (total).........: 14,342,365
-  Percentage...........: 100%
-  Rate.................: 184.54 kHash/s
-  String...............:
-THREAD 3:
-  Worker...............: <Bruteforce> Permutations
+THREAD 2: <Dictionary> Passwords
+  Status...............: Working
+  Uptime...............: 57.68 seconds
+  Key length...........: 9
+  Keys (tried).........: 9,453,892
+  Keys (total).........: 14,344,391
+  Percentage...........: 65.91%
+  Rate.................: 159.78 kHash/s
+  String...............: brittan90
+THREAD 3: <Bruteforce> Permutations
   Status...............: SUCCESS
-  Success..............: true
-  Uptime...............: 187.713 seconds
+  Uptime...............: 57.86 seconds
   Key length...........: 4
   Keys (tried).........: 11,545,148
   Keys (total).........: 13,845,841
-  Percentage...........: 83.36%
-  Rate.................: 70.31 kHash/s
+  Percentage...........: 83.11%
+  Rate.................: 199.69 kHash/s
   String...............: tr1z
 ----------------------------------------------------------------------
+Started................: Fri, 20 Mar 2015 08:23:56 GMT
+Ended..................: Fri, 20 Mar 2015 08:24:54 GMT
+The process took 57.88 seconds.
 6d86ca3c74636711371637c2d73ec3e48dd1737a : tr1z
-Started................: Tue, 17 Mar 2015 14:14:40 GMT
-Ended..................: Tue, 17 Mar 2015 14:17:48 GMT
-The process took 187.75 seconds.
 ```
 
 Copyright and license

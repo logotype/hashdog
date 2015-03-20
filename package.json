@@ -1,6 +1,6 @@
 {
   "name": "hashdog",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
