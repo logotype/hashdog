@@ -11,14 +11,15 @@ import {SHA256} from './../hash/SHA256';
 import {SHA512} from './../hash/SHA512';
 export class BaseWorker {
     constructor(options) {
+        this.cluster = require('cluster');
         this.refreshRate = options.refreshRate;
         this.match = options.match;
         this.string = '';
         this.lastDate = new Date();
         this.data = {
-            type: 'display',
+            command: 'DISPLAY',
             name: 'BaseWorker',
-            thread: 'bw',
+            workerId: 0,
             status: '',
             uptime: 0,
             success: false,
@@ -47,6 +48,12 @@ export class BaseWorker {
             default:
                 throw new Error('Unsupported hash type');
         }
+    }
+
+    initializeWorker(workerId) {
+        let cluster = require('cluster');
+        this.data.workerId = workerId;
+        this.data.processId = process.pid;
     }
 
     initialize(options) {

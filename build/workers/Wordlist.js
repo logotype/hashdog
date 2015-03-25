@@ -32,7 +32,7 @@ var Wordlist = exports.Wordlist = (function (_BaseWorker) {
         this.lastTries = 0;
 
         this.data.name = "<Dictionary> Words";
-        this.data.thread = "wl";
+        this.data.processId = process.pid;
         this.data.status = "Initializing...";
     }
 
@@ -127,7 +127,7 @@ var Wordlist = exports.Wordlist = (function (_BaseWorker) {
                 this.data.status = "Unsuccessful";
                 this.data.string = "";
                 this.sendStatus();
-                process.exit(0);
+                process.send({ command: "DONE", workerId: this.data.workerId });
             }
         }
     });

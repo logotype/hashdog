@@ -36,7 +36,7 @@ hashdog by @logotype. Copyright © 2015. Released under the MIT license.
 Hash: 6d86ca3c74636711371637c2d73ec3e48dd1737a type: SHA1 characters: ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789
 Current rate combined..: 359.47 kHash/s
 
-THREAD 1: <Dictionary> Words
+PROCESS 1: <Dictionary> Words
   Status...............: Unsuccessful
   Uptime...............: 2.92 seconds
   Key length...........: 10
@@ -45,7 +45,7 @@ THREAD 1: <Dictionary> Words
   Percentage...........: 100%
   Rate.................: 93.36 kHash/s
   String...............:
-THREAD 2: <Dictionary> Passwords
+PROCESS 2: <Dictionary> Passwords
   Status...............: Working
   Uptime...............: 57.68 seconds
   Key length...........: 9
@@ -54,7 +54,7 @@ THREAD 2: <Dictionary> Passwords
   Percentage...........: 65.91%
   Rate.................: 159.78 kHash/s
   String...............: brittan90
-THREAD 3: <Bruteforce> Permutations
+PROCESS 3: <Bruteforce> Permutations
   Status...............: SUCCESS
   Uptime...............: 57.86 seconds
   Key length...........: 4

@@ -17,7 +17,7 @@ export class Passwords extends BaseWorker {
         this.data.name = '<Dictionary> Passwords';
         this.data.keysTried = 0;
         this.data.keysTotal = 14344391;
-        this.data.thread = 'pl';
+        this.data.processId = process.pid;
         this.data.status = 'Initializing...';
     }
 
@@ -87,7 +87,7 @@ export class Passwords extends BaseWorker {
             self.data.status = 'Unsuccessful';
             self.data.string = '';
             self.sendStatus();
-            process.exit(0);
+            process.send({command: 'DONE', workerId: this.data.workerId});
         });
 
         liner.on('readable', () => {

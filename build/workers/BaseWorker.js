@@ -27,14 +27,15 @@ var BaseWorker = exports.BaseWorker = (function () {
     function BaseWorker(options) {
         _classCallCheck(this, BaseWorker);
 
+        this.cluster = require("cluster");
         this.refreshRate = options.refreshRate;
         this.match = options.match;
         this.string = "";
         this.lastDate = new Date();
         this.data = {
-            type: "display",
+            command: "DISPLAY",
             name: "BaseWorker",
-            thread: "bw",
+            workerId: 0,
             status: "",
             uptime: 0,
             success: false,
@@ -66,6 +67,13 @@ var BaseWorker = exports.BaseWorker = (function () {
     }
 
     _createClass(BaseWorker, {
+        initializeWorker: {
+            value: function initializeWorker(workerId) {
+                var cluster = require("cluster");
+                this.data.workerId = workerId;
+                this.data.processId = process.pid;
+            }
+        },
         initialize: {
             value: function initialize(options) {
                 throw new Error("Must override initialize!");

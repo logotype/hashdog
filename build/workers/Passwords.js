@@ -33,7 +33,7 @@ var Passwords = exports.Passwords = (function (_BaseWorker) {
         this.data.name = "<Dictionary> Passwords";
         this.data.keysTried = 0;
         this.data.keysTotal = 14344391;
-        this.data.thread = "pl";
+        this.data.processId = process.pid;
         this.data.status = "Initializing...";
     }
 
@@ -86,6 +86,8 @@ var Passwords = exports.Passwords = (function (_BaseWorker) {
         },
         processList: {
             value: function processList(path) {
+                var _this = this;
+
                 var self = this,
                     fs = require("fs"),
                     liner = require("../util/Liner"),
@@ -104,7 +106,7 @@ var Passwords = exports.Passwords = (function (_BaseWorker) {
                     self.data.status = "Unsuccessful";
                     self.data.string = "";
                     self.sendStatus();
-                    process.exit(0);
+                    process.send({ command: "DONE", workerId: _this.data.workerId });
                 });
 
                 liner.on("readable", function () {

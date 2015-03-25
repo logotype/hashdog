@@ -25,6 +25,8 @@ var Passwords = require("./workers/Passwords").Passwords;
 
 var Util = require("./util/Util").Util;
 
+var Task = require("./queue/Task").Task;
+
 var EventEmitter = require("events").EventEmitter;
 
 var HashDog = exports.HashDog = (function (_EventEmitter) {
@@ -38,10 +40,9 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
         var SHA512RegExp = /^[0-9a-f]{128}$/i;
         var MD5RegExp = /^[0-9a-f]{32}$/i;
 
-        var self = this,
-            worker = undefined,
-            refreshRate = 500,
-            cluster = require("cluster"),
+        var i = 0,
+            len = undefined,
+            task = undefined,
             numCPUs = require("os").cpus().length;
 
         if (!options || !options.hash) {
@@ -91,61 +92,43 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
             this.environment = "LIB";
         }
 
+        this.cluster = require("cluster");
+        this.refreshRate = 500;
         this.startDate = new Date();
         this.match = options.hash.toLowerCase();
         this.type = options.type;
         this.chars = options.chars || "ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789";
         this.fixedLength = options.length;
-        this.workers = [];
-        this.status = {
-            wl: {},
-            pl: {},
-            sp: {}
-        };
-        this.wordlist = new Wordlist({ match: this.match, type: this.type, refreshRate: refreshRate });
-        this.passwords = new Passwords({ match: this.match, type: this.type, refreshRate: refreshRate });
-        this.permutator = new Permutator({ match: this.match, type: this.type, refreshRate: refreshRate });
+        this.workers = new Map();
+        this.status = new Map();
+        this.lastDate = new Date();
+        this.wordlist = new Wordlist({ match: this.match, type: this.type, refreshRate: this.refreshRate });
+        this.passwords = new Passwords({ match: this.match, type: this.type, refreshRate: this.refreshRate });
+        this.permutator = new Permutator({ match: this.match, type: this.type, refreshRate: this.refreshRate });
 
-        if (cluster.isMaster) {
-            for (var i = 0; i < numCPUs - 1; i++) {
-                worker = cluster.fork();
-                worker.on("message", function (data) {
-                    if (data.type === "display") {
-                        if (self.environment === "CLI") {
-                            self.display(data);
-                        } else if (self.environment === "LIB") {
-                            self.sendEvents(data);
-                        }
-                    }
-                });
-                this.workers.push(worker);
+        if (this.cluster.isMaster) {
+
+            // Setup default workers
+            task = new Task({ type: "WORDLIST" });
+            this.addWorker(task);
+
+            task = new Task({ type: "PASSWORD" });
+            this.addWorker(task);
+
+            if (this.fixedLength) {
+                task = new Task({ type: "PERMUTATOR", length: this.fixedLength });
+                this.addWorker(task);
+            } else {
+                len = Math.abs(numCPUs - this.workers.size);
+                for (i = 0; i < len; i++) {
+                    this.permutator.currentMaxLength++;
+                    task = new Task({ type: "PERMUTATOR", length: this.permutator.currentMaxLength });
+                    this.addWorker(task);
+                }
             }
-
-            setTimeout(function () {
-                for (var i = 0; i < self.workers.length; i++) {
-                    self.workers[i].send({
-                        thread: i + 1
-                    });
-                }
-            }, 500);
-        } else {
-            process.on("message", function (msg) {
-                if (msg.thread) {
-                    switch (msg.thread) {
-                        case 1:
-                            self.wordlist.initialize({ length: _this.fixedLength });
-                            break;
-                        case 2:
-                            self.passwords.initialize({ length: _this.fixedLength });
-                            break;
-                        case 3:
-                            if (!_this.fixedLength) {
-                                self.permutator.tryCompleteKeyspace = true;
-                            }
-                            self.permutator.initialize({ length: _this.fixedLength, chars: _this.chars });
-                            break;
-                    }
-                }
+        } else if (this.cluster.isWorker) {
+            process.on("message", function (data) {
+                _this.messageHandler(data);
             });
         }
     }
@@ -153,10 +136,82 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
     _inherits(HashDog, _EventEmitter);
 
     _createClass(HashDog, {
+        addWorker: {
+            value: function addWorker(task) {
+                var _this = this;
+
+                var worker = this.cluster.fork();
+                task.workerId = worker.id;
+                worker.on("message", function (data) {
+                    _this.messageHandler(data);
+                });
+                this.workers.set(worker.id.toString(), task);
+                worker.send(task);
+            }
+        },
+        deleteWorker: {
+            value: function deleteWorker(workerId) {
+                this.cluster.workers[workerId].kill();
+                this.cluster.workers[workerId].removeAllListeners("message");
+                this.workers["delete"](workerId);
+                this.status["delete"](workerId);
+            }
+        },
+        messageHandler: {
+            value: function messageHandler(data) {
+                if (this.cluster.isMaster) {
+                    if (data.hasOwnProperty("command")) {
+                        switch (data.command) {
+                            case "DISPLAY":
+                                if (this.environment === "CLI") {
+                                    this.display(data);
+                                } else if (this.environment === "LIB") {
+                                    this.sendEvents(data);
+                                }
+                                break;
+                            case "DONE":
+                                this.deleteWorker(data.workerId);
+                                this.permutator.currentMaxLength++;
+                                var task = new Task({
+                                    type: "PERMUTATOR",
+                                    length: this.permutator.currentMaxLength
+                                });
+                                this.addWorker(task);
+                                break;
+                        }
+                    }
+                } else if (this.cluster.isWorker) {
+                    if (data.hasOwnProperty("command")) {
+                        if (data.command === "setupWorker") {
+                            switch (data.options.type) {
+                                case "WORDLIST":
+                                    this.wordlist.initializeWorker(data.workerId);
+                                    this.wordlist.initialize({
+                                        length: this.fixedLength
+                                    });
+                                    break;
+                                case "PASSWORD":
+                                    this.passwords.initializeWorker(data.workerId);
+                                    this.passwords.initialize({
+                                        length: this.fixedLength
+                                    });
+                                    break;
+                                case "PERMUTATOR":
+                                    this.permutator.initializeWorker(data.workerId);
+                                    this.permutator.initialize({
+                                        length: data.options.length,
+                                        chars: this.chars
+                                    });
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        },
         display: {
             value: function display(data) {
-                var self = this,
-                    currentDate = new Date(),
+                var currentDate = new Date(),
                     dateDiff = undefined,
                     didSucceed = false,
                     secret = "",
@@ -164,43 +219,42 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
                     totalRate = 0,
                     colors = require("colors/safe");
 
-                this.status[data.thread] = data;
+                this.status.set(data.workerId, data);
 
-                if (this.status.wl.success === true) {
-                    didSucceed = true;
-                    secret = this.status.wl.string;
-                } else if (this.status.pl.success === true) {
-                    didSucceed = true;
-                    secret = this.status.pl.string;
-                } else if (this.status.sp.success === true) {
-                    didSucceed = true;
-                    secret = this.status.sp.string;
+                dateDiff = currentDate - this.lastDate;
+
+                if (dateDiff <= this.refreshRate) {
+                    return;
                 }
 
                 Util.cls();
 
-                Object.keys(self.status).forEach(function (key) {
-                    if (self.status[key].hasOwnProperty("status") && (self.status[key].status === "Working" || self.status[key].status === "SUCCESS")) {
-                        totalRate += self.status[key].rate;
+                this.status.forEach(function (data) {
+                    if (data.hasOwnProperty("status") && (data.status === "Working" || data.status === "SUCCESS")) {
+                        totalRate += data.rate;
+                    }
+                    if (data.success === true) {
+                        didSucceed = true;
+                        secret = data.string;
                     }
                 });
 
                 console.log("hashdog by @logotype. Copyright © 2015. Released under the MIT license.");
-                console.log("Hash: " + colors.yellow(self.match) + " type: " + colors.magenta(self.type) + " characters: " + colors.cyan(self.chars));
+                console.log("Hash: " + colors.yellow(this.match) + " type: " + colors.magenta(this.type) + " characters: " + colors.cyan(this.chars));
                 console.log("Current rate combined..: " + totalRate.toFixed(2) + " kHash/s");
                 console.log("");
 
-                Object.keys(self.status).forEach(function (key) {
-                    if (self.status[key].hasOwnProperty("status")) {
-                        console.log("THREAD " + i + ": " + self.status[key].name);
-                        console.log("  Status...............: " + colors.yellow(self.status[key].status));
-                        console.log("  Uptime...............: " + self.status[key].uptime + " seconds");
-                        console.log("  Key length...........: " + Util.numberWithCommas(self.status[key].keyLength));
-                        console.log("  Keys (tried).........: " + Util.numberWithCommas(self.status[key].keysTried));
-                        console.log("  Keys (total).........: " + Util.numberWithCommas(self.status[key].keysTotal));
-                        console.log("  Percentage...........: " + self.status[key].percentage + "%");
-                        console.log("  Rate.................: " + self.status[key].rate.toFixed(2) + " kHash/s");
-                        console.log("  String...............: " + colors.cyan(self.status[key].string));
+                this.status.forEach(function (data) {
+                    if (data.hasOwnProperty("status")) {
+                        console.log("PROCESS " + data.workerId + ": " + data.name);
+                        console.log("  Status...............: " + colors.yellow(data.status));
+                        console.log("  Uptime...............: " + data.uptime + " seconds");
+                        console.log("  Key length...........: " + Util.numberWithCommas(data.keyLength));
+                        console.log("  Keys (tried).........: " + Util.numberWithCommas(data.keysTried));
+                        console.log("  Keys (total).........: " + Util.numberWithCommas(data.keysTotal));
+                        console.log("  Percentage...........: " + data.percentage + "%");
+                        console.log("  Rate.................: " + data.rate.toFixed(2) + " kHash/s");
+                        console.log("  String...............: " + colors.cyan(data.string));
                     }
                     i++;
                 });
@@ -214,35 +268,33 @@ var HashDog = exports.HashDog = (function (_EventEmitter) {
                     console.log(this.match + " : " + colors.green(secret));
                     process.exit(0);
                 }
+                this.lastDate = currentDate;
             }
         },
         sendEvents: {
             value: function sendEvents(data) {
-                var self = this,
-                    didSucceed = false,
+                var _this = this;
+
+                var didSucceed = false,
                     secret = "";
 
-                this.status[data.thread] = data;
+                this.status.set(data.workerId, data);
 
-                if (this.status.wl.success === true) {
-                    didSucceed = true;
-                    secret = this.status.wl.string;
-                } else if (this.status.pl.success === true) {
-                    didSucceed = true;
-                    secret = this.status.pl.string;
-                } else if (this.status.sp.success === true) {
-                    didSucceed = true;
-                    secret = this.status.sp.string;
-                }
-
-                Object.keys(self.status).forEach(function (key) {
-                    if (self.status[key].hasOwnProperty("status")) {
-                        self.emit("progress", self.status[key]);
+                this.status.forEach(function (data) {
+                    if (data.hasOwnProperty("status")) {
+                        _this.emit("progress", data);
+                    }
+                    if (data.success === true) {
+                        didSucceed = true;
+                        secret = data.string;
                     }
                 });
 
                 if (didSucceed) {
-                    self.emit("success", { hash: this.match, string: secret });
+                    this.emit("success", {
+                        hash: this.match,
+                        string: secret
+                    });
                     process.exit(0);
                 }
             }

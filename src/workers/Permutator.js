@@ -14,11 +14,11 @@ export class Permutator extends BaseWorker {
 
         this.permutations = 0;
         this.lastPermutations = 0;
-        this.tryCompleteKeyspace = false;
         this.options = {};
+        this.currentMaxLength = 0;
 
         this.data.name = '<Bruteforce> Permutations';
-        this.data.thread = 'sp';
+        this.data.processId = process.pid;
         this.data.status = 'Initializing...';
     }
 
@@ -52,20 +52,14 @@ export class Permutator extends BaseWorker {
 
         if (n === 0) {
             if (parseInt(this.permutations) >= (parseInt(this.data.keysTotal) - 1)) {
-                if (this.tryCompleteKeyspace) {
-                    this.options.length++;
-                    this.initialize(this.options);
-                    return;
-                } else {
-                    this.data.status = 'Unsuccessful';
-                    this.data.success = false;
-                    this.data.uptime = process.uptime().toFixed(2);
-                    this.data.keysTried = this.permutations + 1;
-                    this.data.percentage = 100;
-                    this.data.string = '';
-                    this.sendStatus();
-                    process.exit(0);
-                }
+                this.data.status = 'Unsuccessful';
+                this.data.success = false;
+                this.data.uptime = process.uptime().toFixed(2);
+                this.data.keysTried = this.permutations + 1;
+                this.data.percentage = 100;
+                this.data.string = '';
+                this.sendStatus();
+                process.send({command: 'DONE', workerId: this.data.workerId});
             }
 
             hash = this.hasher.hash(this.string);
