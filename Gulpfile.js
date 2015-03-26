@@ -15,6 +15,7 @@ gulp.task('build:library', function() {
         .pipe($.jshint({'esnext': true}))
         .pipe($.jshint.reporter('default'))
         .pipe($.babel())
+        .pipe($.uglify())
         .pipe(gulp.dest('./build'));
 });
 
@@ -39,6 +40,7 @@ gulp.task('test', ['build:cli'], function () {
 gulp.task('perf', function () {
     return gulp.src(['./perf/**/*.js'])
         .pipe($.babel())
+        .pipe($.uglify())
         .pipe(gulp.dest('./perfbuild'));
 });
 

@@ -87,7 +87,7 @@ export class SHA256 {
             g = SHA256.add(g, H6);
             h = SHA256.add(h, H7);
         }
-        return Array(a, b, c, d, e, f, g, h);
+        return [a, b, c, d, e, f, g, h];
     }
 
     static arrayToString(input) {

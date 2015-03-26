@@ -118,6 +118,7 @@ export class MD5 {
 
     static md51(s) {
         let n = s.length,
+            o,
             state = [1732584193, -271733879, -1732584194, 271733878],
             i = 64,
             tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -126,7 +127,9 @@ export class MD5 {
             MD5.md5cycle(state, MD5.md5blk(s.substring(i - 64, i)));
         }
         s = s.substring(i - 64);
-        for (i = 0; i < s.length; i++) {
+        i = 0;
+        o = s.length;
+        for (i; i < o; i++) {
             tail[i >> 2] |= s.charCodeAt(i) << ((i % 4) << 3);
         }
         tail[i >> 2] |= 0x80 << ((i % 4) << 3);
