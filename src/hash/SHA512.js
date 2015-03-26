@@ -58,18 +58,15 @@ export class SHA512 {
             j, i, l,
             T1 = new Int64(0, 0),
             T2 = new Int64(0, 0),
-            W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            hash = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            H = [
-                new Int64(0x6a09e667, -205731576),
-                new Int64(-1150833019, -2067093701),
-                new Int64(0x3c6ef372, -23791573),
-                new Int64(-1521486534, 0x5f1d36f1),
-                new Int64(0x510e527f, -1377402159),
-                new Int64(-1694144372, 0x2b3e6c1f),
-                new Int64(0x1f83d9ab, -79577749),
-                new Int64(0x5be0cd19, 0x137e2179)
-            ],
+            W = new Map(),
+            H0 = new Int64(0x6a09e667, -205731576),
+            H1 = new Int64(-1150833019, -2067093701),
+            H2 = new Int64(0x3c6ef372, -23791573),
+            H3 = new Int64(-1521486534, 0x5f1d36f1),
+            H4 = new Int64(0x510e527f, -1377402159),
+            H5 = new Int64(-1694144372, 0x2b3e6c1f),
+            H6 = new Int64(0x1f83d9ab, -79577749),
+            H7 = new Int64(0x5be0cd19, 0x137e2179),
             a = new Int64(0, 0),
             b = new Int64(0, 0),
             c = new Int64(0, 0),
@@ -87,7 +84,7 @@ export class SHA512 {
             r3 = new Int64(0, 0);
 
         for (i = 0; i < 80; i += 1) {
-            W[i] = new Int64(0, 0);
+            W.set(i, new Int64(0, 0));
         }
 
         input[len >> 5] |= 0x80 << (24 - (len & 0x1f));
@@ -95,34 +92,34 @@ export class SHA512 {
         l = input.length;
 
         for (i = 0; i < l; i += 32) {
-            Int64.copy(a, H[0]);
-            Int64.copy(b, H[1]);
-            Int64.copy(c, H[2]);
-            Int64.copy(d, H[3]);
-            Int64.copy(e, H[4]);
-            Int64.copy(f, H[5]);
-            Int64.copy(g, H[6]);
-            Int64.copy(h, H[7]);
+            Int64.copy(a, H0);
+            Int64.copy(b, H1);
+            Int64.copy(c, H2);
+            Int64.copy(d, H3);
+            Int64.copy(e, H4);
+            Int64.copy(f, H5);
+            Int64.copy(g, H6);
+            Int64.copy(h, H7);
 
             for (j = 0; j < 16; j += 1) {
-                W[j].h = input[i + 2 * j];
-                W[j].l = input[i + 2 * j + 1];
+                W.get(j).h = input[i + 2 * j];
+                W.get(j).l = input[i + 2 * j + 1];
             }
 
             for (j = 16; j < 80; j += 1) {
-                Int64.rotr(r1, W[j - 2], 19);
-                Int64.rotl(r2, W[j - 2], 29);
-                Int64.shr(r3, W[j - 2], 6);
+                Int64.rotr(r1, W.get(j - 2), 19);
+                Int64.rotl(r2, W.get(j - 2), 29);
+                Int64.shr(r3, W.get(j - 2), 6);
                 s1.l = r1.l ^ r2.l ^ r3.l;
                 s1.h = r1.h ^ r2.h ^ r3.h;
 
-                Int64.rotr(r1, W[j - 15], 1);
-                Int64.rotr(r2, W[j - 15], 8);
-                Int64.shr(r3, W[j - 15], 7);
+                Int64.rotr(r1, W.get(j - 15), 1);
+                Int64.rotr(r2, W.get(j - 15), 8);
+                Int64.shr(r3, W.get(j - 15), 7);
                 s0.l = r1.l ^ r2.l ^ r3.l;
                 s0.h = r1.h ^ r2.h ^ r3.h;
 
-                Int64.add4(W[j], s1, W[j - 7], s0, W[j - 16]);
+                Int64.add4(W.get(j), s1, W.get(j - 7), s0, W.get(j - 16));
             }
 
             for (j = 0; j < 80; j += 1) {
@@ -144,7 +141,7 @@ export class SHA512 {
                 Maj.l = (a.l & b.l) ^ (a.l & c.l) ^ (b.l & c.l);
                 Maj.h = (a.h & b.h) ^ (a.h & c.h) ^ (b.h & c.h);
 
-                Int64.add5(T1, h, s1, Ch, K[j], W[j]);
+                Int64.add5(T1, h, s1, Ch, K[j], W.get(j));
                 Int64.add(T2, s0, Maj);
 
                 Int64.copy(h, g);
@@ -157,22 +154,17 @@ export class SHA512 {
                 Int64.add(a, T1, T2);
             }
 
-            Int64.add(H[0], H[0], a);
-            Int64.add(H[1], H[1], b);
-            Int64.add(H[2], H[2], c);
-            Int64.add(H[3], H[3], d);
-            Int64.add(H[4], H[4], e);
-            Int64.add(H[5], H[5], f);
-            Int64.add(H[6], H[6], g);
-            Int64.add(H[7], H[7], h);
+            Int64.add(H0, H0, a);
+            Int64.add(H1, H1, b);
+            Int64.add(H2, H2, c);
+            Int64.add(H3, H3, d);
+            Int64.add(H4, H4, e);
+            Int64.add(H5, H5, f);
+            Int64.add(H6, H6, g);
+            Int64.add(H7, H7, h);
         }
 
-        for (i = 0; i < 8; i += 1) {
-            hash[2 * i] = H[i].h;
-            hash[2 * i + 1] = H[i].l;
-        }
-
-        return hash;
+        return new Int32Array([H0.h, H0.l, H1.h, H1.l, H2.h, H2.l, H3.h, H3.l, H4.h, H4.l, H5.h, H5.l, H6.h, H6.l, H7.h, H7.l]);
     }
 
     static arrayToString(input) {
@@ -186,11 +178,8 @@ export class SHA512 {
 
     static stringToArray(input) {
         let i, l = input.length * 8,
-            output = Array(input.length >> 2),
-            lo = output.length;
-        for (i = 0; i < lo; i += 1) {
-            output[i] = 0;
-        }
+            lo = ((l + 128 >> 10) << 5) + 32,
+            output = new Int32Array(lo);
         for (i = 0; i < l; i += 8) {
             output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
         }

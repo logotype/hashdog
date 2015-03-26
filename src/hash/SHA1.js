@@ -14,7 +14,7 @@ export class SHA1 {
     static run(input, len) {
         let i = 0,
             l = ((len + 64 >> 9) << 4) + 15,
-            W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            W = new Uint32Array(80),
             H0 = 1732584193,
             H1 = -271733879,
             H2 = -1732584194,
@@ -60,7 +60,7 @@ export class SHA1 {
             e = SHA1.add(e, H4);
         }
 
-        return [a, b, c, d, e];
+        return new Int32Array([a, b, c, d, e]);
     }
 
     static arrayToString(input) {
@@ -75,11 +75,8 @@ export class SHA1 {
 
     static stringToArray(input) {
         let i, l = input.length * 8,
-            output = Array(input.length >> 2),
-            lo = output.length;
-        for (i = 0; i < lo; i += 1) {
-            output[i] = 0;
-        }
+            lo = ((l + 64 >> 9) << 4) + 16,
+            output = new Uint32Array(lo);
         for (i = 0; i < l; i += 8) {
             output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
         }
