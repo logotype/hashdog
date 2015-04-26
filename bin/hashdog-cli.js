@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-var HashDog = require("../build/hashdog").HashDog;
+var _HashDog = require("../build/hashdog");
 
 process.title = "hashdog";
 
@@ -15,7 +15,7 @@ program.version(pkg.version).usage("2655dd21148f2433763d313407d5d820").option("-
 if (!program.args.length) {
     program.help();
 } else {
-    hashDog = new HashDog({
+    hashDog = new _HashDog.HashDog({
         hash: program.args[0],
         type: program.type,
         length: program.length,

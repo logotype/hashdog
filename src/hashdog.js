@@ -16,6 +16,8 @@ export class HashDog extends EventEmitter {
 
     constructor(options) {
 
+        super(options);
+
         const SHA1RegExp = /^[0-9a-f]{40}$/i;
         const SHA256RegExp = /^[0-9a-f]{64}$/i;
         const SHA512RegExp = /^[0-9a-f]{128}$/i;
