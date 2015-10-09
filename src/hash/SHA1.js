@@ -13,7 +13,7 @@ export class SHA1 {
 
     static run(input, len) {
         let i = 0,
-            l = ((len + 64 >> 9) << 4) + 15,
+            l = (len + 64 >> 9 << 4) + 15,
             W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = 1732584193,
             H1 = -271733879,
@@ -26,7 +26,7 @@ export class SHA1 {
             d = H3,
             e = H4;
 
-        input[len >> 5] |= 0x80 << (24 - len % 32);
+        input[len >> 5] |= 0x80 << 24 - len % 32;
         input[l] = len;
 
         for (; i < l; i += 16) {
@@ -68,7 +68,7 @@ export class SHA1 {
             l = input.length * 32,
             output = '';
         for (; i < l; i += 8) {
-            output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
+            output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
         return output;
     }
@@ -81,47 +81,47 @@ export class SHA1 {
             output[i] = 0;
         }
         for (i = 0; i < l; i += 8) {
-            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << 24 - i % 32;
         }
         return output;
     }
 
     static stringToHex(input) {
-        let hex_tab = '0123456789abcdef',
+        let hex = '0123456789abcdef',
             output = '',
             x, i = 0,
             l = input.length;
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
-            output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
+            output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);
         }
         return output;
     }
 
     static chMajPty(t, b, c, d) {
         if (t < 20) {
-            return (b & c) | ((~b) & d);
+            return b & c | ~b & d;
         }
         if (t < 40) {
             return b ^ c ^ d;
         }
         if (t < 60) {
-            return (b & c) | (b & d) | (c & d);
+            return b & c | b & d | c & d;
         }
         return b ^ c ^ d;
     }
 
     static cnst(t) {
-        return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 : (t < 60) ? -1894007588 : -899497514;
+        return t < 20 ? 1518500249 : t < 40 ? 1859775393 : t < 60 ? -1894007588 : -899497514;
     }
 
     static rotl(x, n) {
-        return (x << n) | (x >>> (32 - n));
+        return x << n | x >>> 32 - n;
     }
 
     static add(x, y) {
         let lsw = (x & 0xFFFF) + (y & 0xFFFF),
             msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-        return (msw << 16) | (lsw & 0xFFFF);
+        return msw << 16 | lsw & 0xFFFF;
     }
 }

@@ -5,8 +5,7 @@ process.title = 'hashdog';
 
 let program = require('commander'),
     path = require('path'),
-    pkg = require(path.join(__dirname, '../package.json')),
-    hashDog;
+    pkg = require(path.join(__dirname, '../package.json'));
 
 program
     .version(pkg.version)
@@ -19,7 +18,7 @@ program
 if (!program.args.length) {
     program.help();
 } else {
-    hashDog = new HashDog({
+    new HashDog({
         hash: program.args[0],
         type: program.type,
         length: program.length,

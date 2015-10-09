@@ -93,15 +93,15 @@ export class MD5 {
 
     static cmn(q, a, b, x, s, t) {
         a = MD5.add32(MD5.add32(a, q), MD5.add32(x, t));
-        return MD5.add32((a << s) | (a >>> (32 - s)), b);
+        return MD5.add32(a << s | a >>> 32 - s, b);
     }
 
     static ff(a, b, c, d, x, s, t) {
-        return MD5.cmn((b & c) | ((~b) & d), a, b, x, s, t);
+        return MD5.cmn(b & c | ~b & d, a, b, x, s, t);
     }
 
     static gg(a, b, c, d, x, s, t) {
-        return MD5.cmn((b & d) | (c & (~d)), a, b, x, s, t);
+        return MD5.cmn(b & d | c & ~d, a, b, x, s, t);
     }
 
     static hh(a, b, c, d, x, s, t) {
@@ -109,11 +109,11 @@ export class MD5 {
     }
 
     static ii(a, b, c, d, x, s, t) {
-        return MD5.cmn(c ^ (b | (~d)), a, b, x, s, t);
+        return MD5.cmn(c ^ (b | ~d), a, b, x, s, t);
     }
 
     static add32(a, b) {
-        return (a + b) & 0xFFFFFFFF;
+        return a + b & 0xFFFFFFFF;
     }
 
     static md51(s) {
@@ -130,9 +130,9 @@ export class MD5 {
         i = 0;
         o = s.length;
         for (i; i < o; i++) {
-            tail[i >> 2] |= s.charCodeAt(i) << ((i % 4) << 3);
+            tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
         }
-        tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+        tail[i >> 2] |= 0x80 << (i % 4 << 3);
         if (i > 55) {
             MD5.md5cycle(state, tail);
             for (i = 0; i < 16; i++) {
@@ -154,11 +154,11 @@ export class MD5 {
     }
 
     static rhex(n) {
-        let hex_chr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
+        let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
             s = '',
             j = 0;
         for (j; j < 4; j++) {
-            s += hex_chr[(n >> (j * 8 + 4)) & 0x0F] + hex_chr[(n >> (j * 8)) & 0x0F];
+            s += hex[n >> j * 8 + 4 & 0x0F] + hex[n >> j * 8 & 0x0F];
         }
         return s;
     }

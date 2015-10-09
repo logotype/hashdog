@@ -65,6 +65,8 @@ export class HashDog extends EventEmitter {
                     throw new Error('Invalid SHA512 hash!');
                 }
                 break;
+            default:
+                break;
         }
 
         if (options && options.environment === 'CLI') {
@@ -150,6 +152,8 @@ export class HashDog extends EventEmitter {
                         });
                         this.addWorker(task);
                         break;
+                    default:
+                        break;
                 }
             }
         } else if (this.cluster.isWorker) {
@@ -174,6 +178,8 @@ export class HashDog extends EventEmitter {
                                 length: data.options.length,
                                 chars: this.chars
                             });
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -200,13 +206,13 @@ export class HashDog extends EventEmitter {
 
         Util.cls();
 
-        this.status.forEach((data) => {
-            if (data.hasOwnProperty('status') && (data.status === 'Working' || data.status === 'SUCCESS')) {
-                totalRate += data.rate;
+        this.status.forEach((statusData) => {
+            if (statusData.hasOwnProperty('status') && (statusData.status === 'Working' || statusData.status === 'SUCCESS')) {
+                totalRate += statusData.rate;
             }
-            if (data.success === true) {
+            if (statusData.success === true) {
                 didSucceed = true;
-                secret = data.string;
+                secret = statusData.string;
             }
         });
 
@@ -215,17 +221,17 @@ export class HashDog extends EventEmitter {
         console.log('Current rate combined..: ' + totalRate.toFixed(2) + ' kHash/s');
         console.log('');
 
-        this.status.forEach((data) => {
-            if (data.hasOwnProperty('status')) {
-                console.log('PROCESS ' + data.workerId + ': ' + data.name);
-                console.log('  Status...............: ' + colors.yellow(data.status));
-                console.log('  Uptime...............: ' + data.uptime + ' seconds');
-                console.log('  Key length...........: ' + Util.numberWithCommas(data.keyLength));
-                console.log('  Keys (tried).........: ' + Util.numberWithCommas(data.keysTried));
-                console.log('  Keys (total).........: ' + Util.numberWithCommas(data.keysTotal));
-                console.log('  Percentage...........: ' + data.percentage + '%');
-                console.log('  Rate.................: ' + data.rate.toFixed(2) + ' kHash/s');
-                console.log('  String...............: ' + colors.cyan(data.string));
+        this.status.forEach((statusData) => {
+            if (statusData.hasOwnProperty('status')) {
+                console.log('PROCESS ' + statusData.workerId + ': ' + statusData.name);
+                console.log('  Status...............: ' + colors.yellow(statusData.status));
+                console.log('  Uptime...............: ' + statusData.uptime + ' seconds');
+                console.log('  Key length...........: ' + Util.numberWithCommas(statusData.keyLength));
+                console.log('  Keys (tried).........: ' + Util.numberWithCommas(statusData.keysTried));
+                console.log('  Keys (total).........: ' + Util.numberWithCommas(statusData.keysTotal));
+                console.log('  Percentage...........: ' + statusData.percentage + '%');
+                console.log('  Rate.................: ' + statusData.rate.toFixed(2) + ' kHash/s');
+                console.log('  String...............: ' + colors.cyan(statusData.string));
             }
             i++;
         });
@@ -248,13 +254,13 @@ export class HashDog extends EventEmitter {
 
         this.status.set(data.workerId, data);
 
-        this.status.forEach((data) => {
-            if (data.hasOwnProperty('status')) {
-                this.emit('progress', data);
+        this.status.forEach((statusData) => {
+            if (statusData.hasOwnProperty('status')) {
+                this.emit('progress', statusData);
             }
-            if (data.success === true) {
+            if (statusData.success === true) {
                 didSucceed = true;
-                secret = data.string;
+                secret = statusData.string;
             }
         });
 

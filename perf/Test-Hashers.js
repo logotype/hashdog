@@ -34,7 +34,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('  SHA1 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -55.54 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('  SHA1 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -40.06 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();
@@ -44,7 +44,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('SHA256 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -76.95 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('SHA256 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -67.09 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();
@@ -54,7 +54,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('SHA512 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -94.12 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('SHA512 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -94.41 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();

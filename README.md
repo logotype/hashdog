@@ -1,14 +1,14 @@
 # hashdog
 Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations.
 
-Written in ECMAScript 6, and runs multiple forked processes for better performance. Using IPC calls in the cluster. In the initial version, three different strategies are used for finding the correct hash. The first method is a english dictionary, along with a few word variations. The second path is using common passwords, while the third strategy is a bruteforce approach. The approach in this case is standard sequential recursive string permutation.
+Written in ES6/ES2015, and runs multiple forked processes for better performance. Using IPC calls in the cluster. Three different strategies are used for finding the correct hash. The first method is a english dictionary, along with a few word variations. The second path is using common passwords, while the third strategy is a bruteforce approach. The approach in this case is standard sequential recursive string permutation.
 
 [![Build Status](https://travis-ci.org/logotype/hashdog.svg?branch=master)](https://travis-ci.org/logotype/hashdog) [![NPM Version](https://badge.fury.io/js/hashdog.svg)](http://badge.fury.io/js/hashdog)
 
 CLI
 ---
 
-Install hashdog globally, `sudo npm install hashdog -g`.
+Install hashdog globally, `npm install hashdog -g`.
 
 Run `Hashdog` in your terminal (run with no arguments for help screen):
 
@@ -64,8 +64,8 @@ PROCESS 3: <Bruteforce> Permutations
   Rate.................: 199.69 kHash/s
   String...............: tr1z
 ----------------------------------------------------------------------
-Started................: Fri, 20 Mar 2015 08:23:56 GMT
-Ended..................: Fri, 20 Mar 2015 08:24:54 GMT
+Started................: Fri, 9 Oct 2015 08:23:56 GMT
+Ended..................: Fri, 9 Oct 2015 08:24:54 GMT
 The process took 57.88 seconds.
 6d86ca3c74636711371637c2d73ec3e48dd1737a : tr1z
 ```

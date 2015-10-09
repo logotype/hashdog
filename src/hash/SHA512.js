@@ -87,8 +87,8 @@ export class SHA512 {
             W[i] = new Int64(0, 0);
         }
 
-        input[len >> 5] |= 0x80 << (24 - (len & 0x1f));
-        input[((len + 128 >> 10) << 5) + 31] = len;
+        input[len >> 5] |= 0x80 << 24 - (len & 0x1f);
+        input[(len + 128 >> 10 << 5) + 31] = len;
         l = input.length;
 
         for (i = 0; i < l; i += 32) {
@@ -123,8 +123,8 @@ export class SHA512 {
             }
 
             for (j = 0; j < 80; j += 1) {
-                Ch.l = (e.l & f.l) ^ (~e.l & g.l);
-                Ch.h = (e.h & f.h) ^ (~e.h & g.h);
+                Ch.l = e.l & f.l ^ ~e.l & g.l;
+                Ch.h = e.h & f.h ^ ~e.h & g.h;
 
                 Int64.rotr(r1, e, 14);
                 Int64.rotr(r2, e, 18);
@@ -138,8 +138,8 @@ export class SHA512 {
                 s0.l = r1.l ^ r2.l ^ r3.l;
                 s0.h = r1.h ^ r2.h ^ r3.h;
 
-                Maj.l = (a.l & b.l) ^ (a.l & c.l) ^ (b.l & c.l);
-                Maj.h = (a.h & b.h) ^ (a.h & c.h) ^ (b.h & c.h);
+                Maj.l = a.l & b.l ^ a.l & c.l ^ b.l & c.l;
+                Maj.h = a.h & b.h ^ a.h & c.h ^ b.h & c.h;
 
                 Int64.add5(T1, h, s1, Ch, K[j], W[j]);
                 Int64.add(T2, s0, Maj);
@@ -171,7 +171,7 @@ export class SHA512 {
         let i, l = input.length * 32,
             output = '';
         for (i = 0; i < l; i += 8) {
-            output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
+            output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
         return output;
     }
@@ -184,19 +184,19 @@ export class SHA512 {
             output[i] = 0;
         }
         for (i = 0; i < l; i += 8) {
-            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << 24 - i % 32;
         }
         return output;
     }
 
     static stringToHex(input) {
-        let hex_tab = '0123456789abcdef',
+        let hex = '0123456789abcdef',
             output = '',
             x, i = 0,
             l = input.length;
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
-            output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
+            output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);
         }
         return output;
     }

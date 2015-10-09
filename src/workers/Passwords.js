@@ -24,7 +24,6 @@ export class Passwords extends BaseWorker {
     initialize(options) {
         let self = this,
             fs = require('fs'),
-            path = require('path'),
             join = require('path').join,
             zlib = require('zlib'),
             tar = require('tar'),
@@ -38,7 +37,7 @@ export class Passwords extends BaseWorker {
         this.sendStatus();
 
         checkFile = fs.createReadStream(join(__dirname, '../../data/data.bin'));
-        checkFile.on('error', function(error) {
+        checkFile.on('error', function() {
             fs.createReadStream(join(__dirname, '../../data/data.tar.gz'))
                 .on('error', (error) => {
                     if (error.code === 'EACCES') {
@@ -124,8 +123,8 @@ export class Passwords extends BaseWorker {
 
         if (dateDiff >= this.refreshRate) {
             triesDiff = this.data.keysTried - this.lastTries;
-            percentage = ((this.data.keysTried / this.data.keysTotal) * 100).toFixed(2);
-            rate = (triesDiff / (dateDiff / 1000)) / 1000;
+            percentage = (this.data.keysTried / this.data.keysTotal * 100).toFixed(2);
+            rate = triesDiff / (dateDiff / 1000) / 1000;
 
             this.data.status = 'Working';
             this.data.success = false;

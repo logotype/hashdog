@@ -51,7 +51,7 @@ export class Permutator extends BaseWorker {
         let j, hash, currentDate, dateDiff, permDiff, percentage, rate;
 
         if (n === 0) {
-            if (parseInt(this.permutations) >= (parseInt(this.data.keysTotal) - 1)) {
+            if (parseInt(this.permutations) >= parseInt(this.data.keysTotal) - 1) {
                 this.data.status = 'Unsuccessful';
                 this.data.success = false;
                 this.data.uptime = process.uptime().toFixed(2);
@@ -80,14 +80,14 @@ export class Permutator extends BaseWorker {
 
             if (dateDiff >= this.refreshRate) {
                 permDiff = this.permutations - this.lastPermutations;
-                percentage = ((this.permutations / this.data.keysTotal) * 100).toFixed(2);
+                percentage = (this.permutations / this.data.keysTotal * 100).toFixed(2);
                 rate = permDiff * (1000 / dateDiff);
 
                 this.data.status = 'Working';
                 this.data.success = false;
                 this.data.uptime = process.uptime().toFixed(2);
                 this.data.keysTried = this.permutations;
-                this.data.rate = (rate / 1000);
+                this.data.rate = rate / 1000;
                 this.data.percentage = percentage;
                 this.data.string = this.string;
                 this.sendStatus();

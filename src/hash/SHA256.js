@@ -24,7 +24,7 @@ export class SHA256 {
         ];
 
         let i = 0,
-            l = ((len + 64 >> 9) << 4) + 15,
+            l = (len + 64 >> 9 << 4) + 15,
             W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = 1779033703,
             H1 = -1150833019,
@@ -43,7 +43,7 @@ export class SHA256 {
             g = H6,
             h = H7;
 
-        input[len >> 5] |= 0x80 << (24 - len % 32);
+        input[len >> 5] |= 0x80 << 24 - len % 32;
         input[l] = len;
 
         for (; i < l; i += 16) {
@@ -95,7 +95,7 @@ export class SHA256 {
             l = input.length * 32,
             output = '';
         for (; i < l; i += 8) {
-            output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
+            output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
         return output;
     }
@@ -109,58 +109,58 @@ export class SHA256 {
             output[i] = 0;
         }
         for (i = 0; i < l; i += 8) {
-            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << 24 - i % 32;
         }
         return output;
     }
 
     static stringToHex(input) {
-        let hex_tab = '0123456789abcdef',
+        let hex = '0123456789abcdef',
             output = '',
             x, i = 0,
             l = input.length;
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
-            output += hex_tab.charAt((x >>> 4) & 0x0F) + hex_tab.charAt(x & 0x0F);
+            output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);
         }
         return output;
     }
 
     static rotl(X, n) {
-        return (X >>> n) | (X << (32 - n));
+        return X >>> n | X << 32 - n;
     }
 
     static rotr(X, n) {
-        return (X >>> n);
+        return X >>> n;
     }
 
     static ch(x, y, z) {
-        return ((x & y) ^ ((~x) & z));
+        return x & y ^ ~x & z;
     }
 
     static maj(x, y, z) {
-        return ((x & y) ^ (x & z) ^ (y & z));
+        return x & y ^ x & z ^ y & z;
     }
 
     static sigma0256(x) {
-        return (SHA256.rotl(x, 2) ^ SHA256.rotl(x, 13) ^ SHA256.rotl(x, 22));
+        return SHA256.rotl(x, 2) ^ SHA256.rotl(x, 13) ^ SHA256.rotl(x, 22);
     }
 
     static sigma1256(x) {
-        return (SHA256.rotl(x, 6) ^ SHA256.rotl(x, 11) ^ SHA256.rotl(x, 25));
+        return SHA256.rotl(x, 6) ^ SHA256.rotl(x, 11) ^ SHA256.rotl(x, 25);
     }
 
     static gamma0256(x) {
-        return (SHA256.rotl(x, 7) ^ SHA256.rotl(x, 18) ^ SHA256.rotr(x, 3));
+        return SHA256.rotl(x, 7) ^ SHA256.rotl(x, 18) ^ SHA256.rotr(x, 3);
     }
 
     static gamma1256(x) {
-        return (SHA256.rotl(x, 17) ^ SHA256.rotl(x, 19) ^ SHA256.rotr(x, 10));
+        return SHA256.rotl(x, 17) ^ SHA256.rotl(x, 19) ^ SHA256.rotr(x, 10);
     }
 
     static add(x, y) {
         let lsw = (x & 0xFFFF) + (y & 0xFFFF),
             msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-        return (msw << 16) | (lsw & 0xFFFF);
+        return msw << 16 | lsw & 0xFFFF;
     }
 }

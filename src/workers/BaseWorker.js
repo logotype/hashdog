@@ -11,7 +11,6 @@ import {SHA256} from './../hash/SHA256';
 import {SHA512} from './../hash/SHA512';
 export class BaseWorker {
     constructor(options) {
-        this.cluster = require('cluster');
         this.refreshRate = options.refreshRate;
         this.match = options.match;
         this.string = '';
@@ -51,12 +50,11 @@ export class BaseWorker {
     }
 
     initializeWorker(workerId) {
-        let cluster = require('cluster');
         this.data.workerId = workerId;
         this.data.processId = process.pid;
     }
 
-    initialize(options) {
+    initialize() {
         throw new Error('Must override initialize!');
     }
 
