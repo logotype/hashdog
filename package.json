@@ -27,7 +27,7 @@
     "gulp-eslint": "^1.0.0",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-mocha": "latest",
-    "gulp-uglify": "latest",
+    "gulp-uglify": "^1.4.2",
     "mocha": "^2.3.3"
   },
   "keywords": [
