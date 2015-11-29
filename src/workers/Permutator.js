@@ -48,7 +48,7 @@ export class Permutator extends BaseWorker {
     }
 
     permute(n) {
-        let j, hash, currentDate, dateDiff, permDiff, percentage, rate;
+        let j = 0, hash = '', currentDate = null, dateDiff = 0, permDiff = 0, percentage = 0, rate = 0;
 
         if (n === 0) {
             if (parseInt(this.permutations) >= parseInt(this.data.keysTotal) - 1) {

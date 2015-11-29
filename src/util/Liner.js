@@ -5,14 +5,13 @@
  * Copyright 2015 Victor Norgren
  * Released under the MIT license
  */
-var stream = require('stream');
-var liner = new stream.Transform({
+const stream = require('stream');
+const liner = new stream.Transform({
     objectMode: true
 });
 
 liner._transform = function(chunk, encoding, done) {
-    'use strict';
-    var data, lines;
+    let data = '', lines = [];
     data = chunk.toString();
     if (this._lastLineData) {
         data = this._lastLineData + data;
@@ -26,7 +25,6 @@ liner._transform = function(chunk, encoding, done) {
 };
 
 liner._flush = function(done) {
-    'use strict';
     if (this._lastLineData) {
         this.push(this._lastLineData);
     }

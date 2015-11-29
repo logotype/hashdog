@@ -22,7 +22,16 @@ export class Wordlist extends BaseWorker {
     initialize(options) {
 
         let i = 0,
-            wordArray, currentString, currentStringLeet, hash, hashLeet, currentDate, dateDiff, triesDiff, percentage, rate;
+            wordArray = [],
+            currentString = '',
+            currentStringLeet = '',
+            hash = '',
+            hashLeet = '',
+            currentDate = null,
+            dateDiff = 0,
+            triesDiff = 0,
+            percentage = 0,
+            rate = 0;
 
         this.data.status = 'Loading dictionary';
         this.sendStatus();

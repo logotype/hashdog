@@ -12,9 +12,9 @@ export class SHA1 {
     }
 
     static run(input, len) {
+        const l = (len + 64 >> 9 << 4) + 15;
+        const W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let i = 0,
-            l = (len + 64 >> 9 << 4) + 15,
-            W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = 1732584193,
             H1 = -271733879,
             H2 = -1732584194,
@@ -37,7 +37,7 @@ export class SHA1 {
             H4 = e;
 
             let j = 0,
-                t;
+                t = null;
 
             for (; j < 80; j += 1) {
                 if (j < 16) {
@@ -64,9 +64,10 @@ export class SHA1 {
     }
 
     static arrayToString(input) {
+        const l = input.length * 32;
         let i = 0,
-            l = input.length * 32,
             output = '';
+
         for (; i < l; i += 8) {
             output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
@@ -74,9 +75,11 @@ export class SHA1 {
     }
 
     static stringToArray(input) {
-        let i, l = input.length * 8,
-            output = Array(input.length >> 2),
-            lo = output.length;
+        const l = input.length * 8;
+        const output = Array(input.length >> 2);
+        const lo = output.length;
+        let i = 0;
+
         for (i = 0; i < lo; i += 1) {
             output[i] = 0;
         }
@@ -87,10 +90,11 @@ export class SHA1 {
     }
 
     static stringToHex(input) {
-        let hex = '0123456789abcdef',
-            output = '',
-            x, i = 0,
-            l = input.length;
+        const hex = '0123456789abcdef';
+        const l = input.length;
+        let output = '',
+            x = 0, i = 0;
+
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
             output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);
@@ -120,7 +124,7 @@ export class SHA1 {
     }
 
     static add(x, y) {
-        let lsw = (x & 0xFFFF) + (y & 0xFFFF),
+        const lsw = (x & 0xFFFF) + (y & 0xFFFF),
             msw = (x >> 16) + (y >> 16) + (lsw >> 16);
         return msw << 16 | lsw & 0xFFFF;
     }

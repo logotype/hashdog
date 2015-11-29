@@ -22,9 +22,9 @@ export class HashDog extends EventEmitter {
         const SHA256RegExp = /^[0-9a-f]{64}$/i;
         const SHA512RegExp = /^[0-9a-f]{128}$/i;
         const MD5RegExp = /^[0-9a-f]{32}$/i;
+        const numCPUs = require('os').cpus().length;
 
-        let i = 0,
-            len, task, numCPUs = require('os').cpus().length;
+        let i = 0, len = 0, task = null;
 
         if (!options || !options.hash) {
             throw new Error('Missing options!');
@@ -118,7 +118,7 @@ export class HashDog extends EventEmitter {
     }
 
     addWorker(task) {
-        let worker = this.cluster.fork();
+        const worker = this.cluster.fork();
         task.workerId = worker.id;
         worker.on('message', (data) => {this.messageHandler(data);});
         this.workers.set(worker.id.toString(), task);
@@ -126,8 +126,8 @@ export class HashDog extends EventEmitter {
     }
 
     deleteWorker(workerId) {
-        this.cluster.workers[workerId].kill();
         this.cluster.workers[workerId].removeAllListeners('message');
+        this.cluster.workers[workerId].kill();
         this.workers.delete(workerId);
         this.status.delete(workerId);
     }
@@ -146,7 +146,7 @@ export class HashDog extends EventEmitter {
                     case 'DONE':
                         this.deleteWorker(data.workerId);
                         this.permutator.currentMaxLength++;
-                        let task = new Task({
+                        const task = new Task({
                             type: 'PERMUTATOR',
                             length: this.permutator.currentMaxLength
                         });
@@ -188,17 +188,16 @@ export class HashDog extends EventEmitter {
     }
 
     display(data) {
-        let currentDate = new Date(),
-            dateDiff,
+        const currentDate = new Date(),
+            colors = require('colors/safe');
+
+        let dateDiff = currentDate - this.lastDate,
             didSucceed = false,
             secret = '',
             i = 1,
-            totalRate = 0,
-            colors = require('colors/safe');
+            totalRate = 0;
 
         this.status.set(data.workerId, data);
-
-        dateDiff = currentDate - this.lastDate;
 
         if (dateDiff <= this.refreshRate) {
             return;
@@ -217,21 +216,21 @@ export class HashDog extends EventEmitter {
         });
 
         console.log('hashdog by @logotype. Copyright © 2015. Released under the MIT license.');
-        console.log('Hash: ' + colors.yellow(this.match) + ' type: ' + colors.magenta(this.type) + ' characters: ' + colors.cyan(this.chars));
-        console.log('Current rate combined..: ' + totalRate.toFixed(2) + ' kHash/s');
+        console.log(`Hash: ${colors.yellow(this.match)} type: ${colors.magenta(this.type)} characters: ${colors.cyan(this.chars)}`);
+        console.log(`Current rate combined..: ${totalRate.toFixed(2)} kHash/s`);
         console.log('');
 
         this.status.forEach((statusData) => {
             if (statusData.hasOwnProperty('status')) {
-                console.log('PROCESS ' + statusData.workerId + ': ' + statusData.name);
-                console.log('  Status...............: ' + colors.yellow(statusData.status));
-                console.log('  Uptime...............: ' + statusData.uptime + ' seconds');
-                console.log('  Key length...........: ' + Util.numberWithCommas(statusData.keyLength));
-                console.log('  Keys (tried).........: ' + Util.numberWithCommas(statusData.keysTried));
-                console.log('  Keys (total).........: ' + Util.numberWithCommas(statusData.keysTotal));
-                console.log('  Percentage...........: ' + statusData.percentage + '%');
-                console.log('  Rate.................: ' + statusData.rate.toFixed(2) + ' kHash/s');
-                console.log('  String...............: ' + colors.cyan(statusData.string));
+                console.log(`PROCESS ${statusData.workerId}: ${statusData.name}`);
+                console.log(`  Status...............: ${colors.yellow(statusData.status)}`);
+                console.log(`  Uptime...............: ${statusData.uptime} seconds`);
+                console.log(`  Key length...........: ${Util.numberWithCommas(statusData.keyLength)}`);
+                console.log(`  Keys (tried).........: ${Util.numberWithCommas(statusData.keysTried)}`);
+                console.log(`  Keys (total).........: ${Util.numberWithCommas(statusData.keysTotal)}`);
+                console.log(`  Percentage...........: ${statusData.percentage}%`);
+                console.log(`  Rate.................: ${statusData.rate.toFixed(2)} kHash/s}`);
+                console.log(`  String...............: ${colors.cyan(statusData.string)}`);
             }
             i++;
         });
@@ -239,10 +238,10 @@ export class HashDog extends EventEmitter {
         if (didSucceed) {
             dateDiff = currentDate - this.startDate;
             console.log('----------------------------------------------------------------------');
-            console.log('Started................: ' + this.startDate.toUTCString());
-            console.log('Ended..................: ' + currentDate.toUTCString());
-            console.log('The process took ' + (dateDiff / 1000).toFixed(2) + ' seconds.');
-            console.log(this.match + ' : ' + colors.green(secret));
+            console.log(`Started................: ${this.startDate.toUTCString()}`);
+            console.log(`Ended..................: ${currentDate.toUTCString()}`);
+            console.log(`The process took ${(dateDiff / 1000).toFixed(2)} seconds.`);
+            console.log(`${this.match} : ${colors.green(secret)}`);
             process.exit(0);
         }
         this.lastDate = currentDate;

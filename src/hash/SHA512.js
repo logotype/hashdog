@@ -13,7 +13,7 @@ export class SHA512 {
     }
 
     static run(input, len) {
-        let K = [
+        const K = [
                 new Int64(0x428a2f98, -685199838), new Int64(0x71374491, 0x23ef65cd),
                 new Int64(-1245643825, -330482897), new Int64(-373957723, -2121671748),
                 new Int64(0x3956c25b, -213338824), new Int64(0x59f111f1, -1241133031),
@@ -54,9 +54,8 @@ export class SHA512 {
                 new Int64(0x3c9ebe0a, 0x15c9bebc), new Int64(0x431d67c4, -1676669620),
                 new Int64(0x4cc5d4be, -885112138), new Int64(0x597f299c, -60457430),
                 new Int64(0x5fcb6fab, 0x3ad6faec), new Int64(0x6c44198c, 0x4a475817)
-            ],
-            j, i, l,
-            T1 = new Int64(0, 0),
+            ];
+        const T1 = new Int64(0, 0),
             T2 = new Int64(0, 0),
             W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = new Int64(0x6a09e667, -205731576),
@@ -82,6 +81,8 @@ export class SHA512 {
             r1 = new Int64(0, 0),
             r2 = new Int64(0, 0),
             r3 = new Int64(0, 0);
+
+        let j = 0, i = 0, l = 0;
 
         for (i = 0; i < 80; i += 1) {
             W[i] = new Int64(0, 0);
@@ -168,8 +169,10 @@ export class SHA512 {
     }
 
     static arrayToString(input) {
-        let i, l = input.length * 32,
+        const l = input.length * 32;
+        let i = 0,
             output = '';
+
         for (i = 0; i < l; i += 8) {
             output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
@@ -177,9 +180,11 @@ export class SHA512 {
     }
 
     static stringToArray(input) {
-        let i, l = input.length * 8,
-            output = Array(input.length >> 2),
-            lo = output.length;
+        const l = input.length * 8;
+        const output = Array(input.length >> 2);
+        const lo = output.length;
+        let i = 0;
+
         for (i = 0; i < lo; i += 1) {
             output[i] = 0;
         }
@@ -190,10 +195,11 @@ export class SHA512 {
     }
 
     static stringToHex(input) {
-        let hex = '0123456789abcdef',
-            output = '',
-            x, i = 0,
-            l = input.length;
+        const hex = '0123456789abcdef';
+        const l = input.length;
+        let output = '',
+            x = null, i = 0;
+
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
             output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);

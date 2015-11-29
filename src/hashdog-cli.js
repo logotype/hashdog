@@ -3,7 +3,7 @@ import {HashDog} from '../build/hashdog';
 
 process.title = 'hashdog';
 
-let program = require('commander'),
+const program = require('commander'),
     path = require('path'),
     pkg = require(path.join(__dirname, '../package.json'));
 

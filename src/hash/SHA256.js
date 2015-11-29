@@ -22,10 +22,10 @@ export class SHA256 {
             430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779,
             1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298
         ];
+        const l = (len + 64 >> 9 << 4) + 15;
+        const W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         let i = 0,
-            l = (len + 64 >> 9 << 4) + 15,
-            W = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             H0 = 1779033703,
             H1 = -1150833019,
             H2 = 1013904242,
@@ -57,7 +57,7 @@ export class SHA256 {
             H7 = h;
 
             let j = 0,
-                T1, T2;
+                T1 = null, T2 = null;
 
             for (; j < 64; j += 1) {
                 if (j < 16) {
@@ -91,9 +91,10 @@ export class SHA256 {
     }
 
     static arrayToString(input) {
+        const l = input.length * 32;
         let i = 0,
-            l = input.length * 32,
             output = '';
+
         for (; i < l; i += 8) {
             output += String.fromCharCode(input[i >> 5] >>> 24 - i % 32 & 0xFF);
         }
@@ -101,10 +102,11 @@ export class SHA256 {
     }
 
     static stringToArray(input) {
-        let i = 0,
-            l = input.length * 8,
-            output = Array(input.length >> 2),
-            lo = output.length;
+        const l = input.length * 8;
+        const output = Array(input.length >> 2);
+        const lo = output.length;
+        let i = 0;
+
         for (; i < lo; i += 1) {
             output[i] = 0;
         }
@@ -115,10 +117,11 @@ export class SHA256 {
     }
 
     static stringToHex(input) {
-        let hex = '0123456789abcdef',
-            output = '',
-            x, i = 0,
-            l = input.length;
+        const hex = '0123456789abcdef';
+        const l = input.length;
+        let output = '',
+            x = null, i = 0;
+
         for (; i < l; i += 1) {
             x = input.charCodeAt(i);
             output += hex.charAt(x >>> 4 & 0x0F) + hex.charAt(x & 0x0F);
@@ -159,7 +162,7 @@ export class SHA256 {
     }
 
     static add(x, y) {
-        let lsw = (x & 0xFFFF) + (y & 0xFFFF),
+        const lsw = (x & 0xFFFF) + (y & 0xFFFF),
             msw = (x >> 16) + (y >> 16) + (lsw >> 16);
         return msw << 16 | lsw & 0xFFFF;
     }

@@ -22,13 +22,13 @@ export class Passwords extends BaseWorker {
     }
 
     initialize(options) {
-        let self = this,
-            fs = require('fs'),
+        const fs = require('fs'),
             join = require('path').join,
             zlib = require('zlib'),
             tar = require('tar'),
-            fullPath = join(__dirname, '../../data/data.bin'),
-            checkFile;
+            fullPath = join(__dirname, '../../data/data.bin');
+
+        let checkFile = null;
 
         this.passwordLength = options.length;
 
@@ -37,39 +37,38 @@ export class Passwords extends BaseWorker {
         this.sendStatus();
 
         checkFile = fs.createReadStream(join(__dirname, '../../data/data.bin'));
-        checkFile.on('error', function() {
+        checkFile.on('error', () => {
             fs.createReadStream(join(__dirname, '../../data/data.tar.gz'))
                 .on('error', (error) => {
                     if (error.code === 'EACCES') {
-                        self.data.status = 'Please run with sudo. Error when extracting data.';
+                        this.data.status = 'Please run with sudo. Error when extracting data.';
                     } else {
-                        self.data.status = error.toString();
+                        this.data.status = error.toString();
                     }
-                    self.data.uptime = process.uptime().toFixed(2);
-                    self.sendStatus();
+                    this.data.uptime = process.uptime().toFixed(2);
+                    this.sendStatus();
                     process.exit(0);
                 })
                 .pipe(zlib.Unzip())
                 .pipe(tar.Parse())
                 .on('entry', (entry) => {
-                    self.data.status = 'Extracting password list';
-                    self.data.uptime = process.uptime().toFixed(2);
-                    self.sendStatus();
+                    this.data.status = 'Extracting password list';
+                    this.data.uptime = process.uptime().toFixed(2);
+                    this.sendStatus();
                     entry.pipe(fs.createWriteStream(fullPath));
-                    entry.on('end', function() {
-                        self.processList(fullPath);
+                    entry.on('end', () => {
+                        this.processList(fullPath);
                     });
                 });
         });
-        checkFile.on('readable', function() {
-            self.data.status = 'Password list cached';
-            self.processList(fullPath);
+        checkFile.on('readable', () => {
+            this.data.status = 'Password list cached';
+            this.processList(fullPath);
         });
     }
 
     processList(path) {
-        let self = this,
-            fs = require('fs'),
+        const fs = require('fs'),
             liner = require('../util/Liner'),
             source = fs.createReadStream(path);
 
@@ -80,25 +79,25 @@ export class Passwords extends BaseWorker {
         source.pipe(liner);
         source.on('end', () => {
             fs.unlinkSync(path);
-            self.data.percentage = 100;
-            self.data.uptime = process.uptime().toFixed(2);
-            self.data.keyLength = 0;
-            self.data.status = 'Unsuccessful';
-            self.data.string = '';
-            self.sendStatus();
+            this.data.percentage = 100;
+            this.data.uptime = process.uptime().toFixed(2);
+            this.data.keyLength = 0;
+            this.data.status = 'Unsuccessful';
+            this.data.string = '';
+            this.sendStatus();
             process.send({command: 'DONE', workerId: this.data.workerId});
         });
 
         liner.on('readable', () => {
-            let line;
+            let line = null;
             while ((line = liner.read()) !== null) {
-                self.processLine(line);
+                this.processLine(line);
             }
         });
     }
 
     processLine(line) {
-        let hash, currentDate, dateDiff, triesDiff, percentage, rate;
+        let hash = '', currentDate = null, dateDiff = 0, triesDiff = 0, percentage = 0, rate = 0;
 
         // If a password length is specified, skip if not matching exactly
         if (this.passwordLength && line.length !== this.passwordLength) {

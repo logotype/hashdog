@@ -117,11 +117,12 @@ export class MD5 {
     }
 
     static md51(s) {
-        let n = s.length,
-            o,
-            state = [1732584193, -271733879, -1732584194, 271733878],
-            i = 64,
-            tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const n = s.length;
+        const state = [1732584193, -271733879, -1732584194, 271733878];
+        const tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        let o = 0,
+            i = 64;
 
         for (i; i <= n; i += 64) {
             MD5.md5cycle(state, MD5.md5blk(s.substring(i - 64, i)));
@@ -145,8 +146,9 @@ export class MD5 {
     }
 
     static md5blk(s) {
-        let md5blks = [],
-            i = 0;
+        const md5blks = [];
+        let i = 0;
+
         for (i; i < 64; i += 4) {
             md5blks[i >> 2] = s.charCodeAt(i) + (s.charCodeAt(i + 1) << 8) + (s.charCodeAt(i + 2) << 16) + (s.charCodeAt(i + 3) << 24);
         }
@@ -154,9 +156,10 @@ export class MD5 {
     }
 
     static rhex(n) {
-        let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
-            s = '',
+        const hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+        let s = '',
             j = 0;
+
         for (j; j < 4; j++) {
             s += hex[n >> j * 8 + 4 & 0x0F] + hex[n >> j * 8 & 0x0F];
         }
@@ -164,8 +167,8 @@ export class MD5 {
     }
 
     static hex(x) {
-        let i = 0,
-            length = x.length;
+        const length = x.length;
+        let i = 0;
 
         for (i; i < length; i++) {
             x[i] = MD5.rhex(x[i]);
