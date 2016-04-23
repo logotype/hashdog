@@ -1,5 +1,5 @@
 import {SHA1} from './../src/hash/SHA1';
-var assert = require('assert');
+const assert = require('assert');
 
 describe('SHA1', () => {
     describe('#hash', () => {
@@ -28,7 +28,7 @@ describe('SHA1', () => {
             assert.equal('38f11bc1b1f19016e253c31064e04259d944b325', SHA1.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
         });
         it('should return a hash with length 40 characters', () => {
-            let hash = SHA1.hash('cryptographic hash function');
+            const hash = SHA1.hash('cryptographic hash function');
             assert.equal(hash.length, 40);
         });
     });

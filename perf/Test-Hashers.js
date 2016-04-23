@@ -1,8 +1,8 @@
-import {MD5} from './../build/hash/MD5';
-import {SHA1} from './../build/hash/SHA1';
-import {SHA256} from './../build/hash/SHA256';
-import {SHA512} from './../build/hash/SHA512';
-import {Util} from './../build/util/Util';
+import {MD5} from './../build/MD5';
+import {SHA1} from './../build/SHA1';
+import {SHA256} from './../build/SHA256';
+import {SHA512} from './../build/SHA512';
+import {Util} from './../build/Util';
 
 Util.cls();
 console.log('Running performance tests...');

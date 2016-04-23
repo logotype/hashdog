@@ -2,7 +2,7 @@
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
- * Copyright 2015 Victor Norgren
+ * Copyright 2016 Victor Norgren
  * Released under the MIT license
  */
 import {Permutator} from './workers/Permutator';
@@ -14,60 +14,19 @@ import {EventEmitter} from 'events';
 
 export class HashDog extends EventEmitter {
 
-    constructor(options) {
+    static SHA1RegExp = /^[0-9a-f]{40}$/i;
+    static SHA256RegExp = /^[0-9a-f]{64}$/i;
+    static SHA512RegExp = /^[0-9a-f]{128}$/i;
+    static MD5RegExp = /^[0-9a-f]{32}$/i;
 
+    constructor(options) {
         super(options);
 
-        const SHA1RegExp = /^[0-9a-f]{40}$/i;
-        const SHA256RegExp = /^[0-9a-f]{64}$/i;
-        const SHA512RegExp = /^[0-9a-f]{128}$/i;
-        const MD5RegExp = /^[0-9a-f]{32}$/i;
         const numCPUs = require('os').cpus().length;
-
         let i = 0, len = 0, task = null;
 
-        if (!options || !options.hash) {
-            throw new Error('Missing options!');
-        } else if (!options.hash) {
-            throw new Error('Missing hash!');
-        } else if (!options.type) {
-            if (MD5RegExp.test(options.hash)) {
-                options.type = 'MD5';
-            } else if (SHA1RegExp.test(options.hash)) {
-                options.type = 'SHA1';
-            } else if (SHA256RegExp.test(options.hash)) {
-                options.type = 'SHA256';
-            } else if (SHA512RegExp.test(options.hash)) {
-                options.type = 'SHA512';
-            } else {
-                throw new Error('Please specify hash type!');
-            }
-        }
-
-        switch (options.type) {
-            case 'MD5':
-                if (!MD5RegExp.test(options.hash)) {
-                    throw new Error('Invalid MD5 hash!');
-                }
-                break;
-            case 'SHA1':
-                if (!SHA1RegExp.test(options.hash)) {
-                    throw new Error('Invalid SHA1 hash!');
-                }
-                break;
-            case 'SHA256':
-                if (!SHA256RegExp.test(options.hash)) {
-                    throw new Error('Invalid SHA256 hash!');
-                }
-                break;
-            case 'SHA512':
-                if (!SHA512RegExp.test(options.hash)) {
-                    throw new Error('Invalid SHA512 hash!');
-                }
-                break;
-            default:
-                break;
-        }
+        this.checkOptionParameters(options);
+        this.checkOptionTypes(options);
 
         if (options && options.environment === 'CLI') {
             this.environment = 'CLI';
@@ -114,6 +73,53 @@ export class HashDog extends EventEmitter {
             process.on('message', (data) => {
                 this.messageHandler(data);
             });
+        }
+    }
+
+    checkOptionParameters(options) {
+        if (!options || !options.hash) {
+            throw new Error('Missing options!');
+        } else if (!options.hash) {
+            throw new Error('Missing hash!');
+        } else if (!options.type) {
+            if (HashDog.MD5RegExp.test(options.hash)) {
+                options.type = 'MD5';
+            } else if (HashDog.SHA1RegExp.test(options.hash)) {
+                options.type = 'SHA1';
+            } else if (HashDog.SHA256RegExp.test(options.hash)) {
+                options.type = 'SHA256';
+            } else if (HashDog.SHA512RegExp.test(options.hash)) {
+                options.type = 'SHA512';
+            } else {
+                throw new Error('Please specify hash type!');
+            }
+        }
+    }
+
+    checkOptionTypes(options) {
+        switch (options.type) {
+            case 'MD5':
+                if (!HashDog.MD5RegExp.test(options.hash)) {
+                    throw new Error('Invalid MD5 hash!');
+                }
+                break;
+            case 'SHA1':
+                if (!HashDog.SHA1RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA1 hash!');
+                }
+                break;
+            case 'SHA256':
+                if (!HashDog.SHA256RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA256 hash!');
+                }
+                break;
+            case 'SHA512':
+                if (!HashDog.SHA512RegExp.test(options.hash)) {
+                    throw new Error('Invalid SHA512 hash!');
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -215,7 +221,7 @@ export class HashDog extends EventEmitter {
             }
         });
 
-        console.log('hashdog by @logotype. Copyright © 2015. Released under the MIT license.');
+        console.log('hashdog by @logotype. Copyright © 2016. Released under the MIT license.');
         console.log(`Hash: ${colors.yellow(this.match)} type: ${colors.magenta(this.type)} characters: ${colors.cyan(this.chars)}`);
         console.log(`Current rate combined..: ${totalRate.toFixed(2)} kHash/s`);
         console.log('');

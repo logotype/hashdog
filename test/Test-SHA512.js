@@ -1,5 +1,5 @@
 import {SHA512} from './../src/hash/SHA512';
-var assert = require('assert');
+const assert = require('assert');
 
 describe('SHA512', () => {
     describe('#hash', () => {
@@ -28,7 +28,7 @@ describe('SHA512', () => {
             assert.equal('72bf79456740d55c96ad9301a353d6f821910ae3b2e9b2f40220630d4fc61c2c2d8ce3fa42a2fb744b39d59f08ba5f3678972b20a1c7ae5061d4919f1b1b0234', SHA512.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
         });
         it('should return a hash with length 128 characters', () => {
-            let hash = SHA512.hash('cryptographic hash function');
+            const hash = SHA512.hash('cryptographic hash function');
             assert.equal(hash.length, 128);
         });
     });

@@ -1,8 +1,9 @@
-var assert = require('assert');
+import HashDog from './../src/HashDog';
+const assert = require('assert');
 
 describe('HashDog', () => {
     describe('#constructor', () => {
-        let hashdog;
+        let hashdog = null; // eslint-disable-line no-unused-vars
         after((done) => {
             hashdog = null;
             done();

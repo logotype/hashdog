@@ -1,5 +1,5 @@
 import {SHA256} from './../src/hash/SHA256';
-var assert = require('assert');
+const assert = require('assert');
 
 describe('SHA256', () => {
     describe('#hash', () => {
@@ -28,7 +28,7 @@ describe('SHA256', () => {
             assert.equal('6e4ecb71dc148318e2fd61efd37b906f29205b5767bea7c89625fafdd2106b91', SHA256.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
         });
         it('should return a hash with length 64 characters', () => {
-            let hash = SHA256.hash('cryptographic hash function');
+            const hash = SHA256.hash('cryptographic hash function');
             assert.equal(hash.length, 64);
         });
     });

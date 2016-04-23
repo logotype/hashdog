@@ -2,7 +2,7 @@
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
- * Copyright 2015 Victor Norgren
+ * Copyright 2016 Victor Norgren
  * Released under the MIT license
  */
 import {BaseWorker} from './BaseWorker';
@@ -22,7 +22,7 @@ export class Wordlist extends BaseWorker {
     initialize(options) {
 
         let i = 0,
-            wordArray = [],
+            wordArray = require('json!../../data/wordlist-english.json').data,
             currentString = '',
             currentStringLeet = '',
             hash = '',
@@ -35,7 +35,6 @@ export class Wordlist extends BaseWorker {
 
         this.data.status = 'Loading dictionary';
         this.sendStatus();
-        wordArray = require('../../data/wordlist-english.json').data;
 
         // If a password length is specified, filter the array
         if (options.length) {

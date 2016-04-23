@@ -16,7 +16,7 @@ Run `Hashdog` in your terminal (run with no arguments for help screen):
 hashdog 6d86ca3c74636711371637c2d73ec3e48dd1737a
 ```
 
-io.js/node
+node
 ----------
 
 Import and instantiate `Hashdog` (you might need to transpile the codebase from ES6 due to lack of support for modules and other features):
@@ -32,7 +32,7 @@ hashDog.on('success', (data) => {
 Example output:
 
 ```bash
-hashdog by @logotype. Copyright © 2015. Released under the MIT license.
+hashdog by @logotype. Copyright © 2016. Released under the MIT license.
 Hash: 6d86ca3c74636711371637c2d73ec3e48dd1737a type: SHA1 characters: ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789
 Current rate combined..: 359.47 kHash/s
 

@@ -1,13 +1,13 @@
 {
   "name": "hashdog",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
     "url": "https://github.com/logotype/hashdog.git"
   },
   "license": "MIT",
-  "main": "src",
+  "main": "./build/HashDog.js",
   "bin": {
     "hashdog": "./bin/hashdog-cli.js"
   },
@@ -17,21 +17,21 @@
     "tar": "^2.2.1"
   },
   "devDependencies": {
-    "babel": "^6.3.26",
-    "babel-core": "^6.3.26",
-    "babel-eslint": "^4.1.6",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-stage-0": "^6.3.13",
-    "del": "^2.2.0",
-    "gulp": "^3.9.0",
-    "gulp-babel": "^6.1.1",
-    "gulp-chmod": "^1.3.0",
-    "gulp-cli": "^1.1.0",
-    "gulp-eslint": "^1.1.1",
-    "gulp-load-plugins": "^1.2.0",
-    "gulp-mocha": "^2.2.0",
-    "gulp-uglify": "^1.5.1",
-    "mocha": "^2.3.4"
+    "babel": "^6.5.2",
+    "babel-cli": "^6.7.7",
+    "babel-core": "^6.7.7",
+    "babel-eslint": "^6.0.3",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "chai": "^3.5.0",
+    "eslint": "^2.8.0",
+    "eslint-plugin-babel": "^3.2.0",
+    "json-loader": "^0.5.4",
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
+    "webpack": "^1.13.0",
+    "yargs": "^4.6.0"
   },
   "keywords": [
     "MD5",
@@ -43,7 +43,10 @@
     "ES6"
   ],
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register test/**/*.js",
-    "perf": "./node_modules/gulp-cli/bin/gulp.js --silent;./node_modules/gulp-cli/bin/gulp.js perf --silent;node ./perfbuild/Test-Hashers.js"
+    "lint": "eslint *.babel.js src test",
+    "build": "rimraf build && webpack -p",
+    "perf": "babel-node perf/Test-Hashers.js",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
+    "example": "node examples/example_md5.js"
   }
 }

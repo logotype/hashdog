@@ -1,5 +1,5 @@
 import {MD5} from './../src/hash/MD5';
-var assert = require('assert');
+const assert = require('assert');
 
 describe('MD5', () => {
     describe('#hash', () => {
@@ -28,7 +28,7 @@ describe('MD5', () => {
             assert.equal('268c7919189d85e276d74b8c60b2f84f', MD5.hash('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'));
         });
         it('should return a hash with length 32 characters', () => {
-            let hash = MD5.hash('cryptographic hash function');
+            const hash = MD5.hash('cryptographic hash function');
             assert.equal(hash.length, 32);
         });
     });

@@ -2,7 +2,7 @@
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
- * Copyright 2015 Victor Norgren
+ * Copyright 2016 Victor Norgren
  * Released under the MIT license
  */
 const stream = require('stream');
