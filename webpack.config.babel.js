@@ -6,12 +6,7 @@ const nodeEnv = optimizeMinimize ? 'production' : 'development';
 
 export default {
     entry: {
-        'HashDog': './src/HashDog.js',
-        'SHA1': ['./src/hash/SHA1.js'],
-        'SHA256': ['./src/hash/SHA256.js'],
-        'SHA512': ['./src/hash/SHA512.js'],
-        'Util': ['./src/util/Util.js']
-
+        'HashDog': './src/HashDog.js'
     },
     target: 'node',
     output: {

@@ -1,6 +1,6 @@
 {
   "name": "hashdog",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
@@ -15,6 +15,9 @@
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "md5-es": "^1.0.0",
+    "sha1-es": "^1.0.1",
+    "sha256-es": "^1.0.1",
+    "sha512-es": "^1.0.0",
     "tar": "^2.2.1"
   },
   "devDependencies": {

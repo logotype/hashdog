@@ -6,9 +6,9 @@
  * Released under the MIT license
  */
 import MD5 from 'md5-es';
-import {SHA1} from './../hash/SHA1';
-import {SHA256} from './../hash/SHA256';
-import {SHA512} from './../hash/SHA512';
+import SHA1 from 'sha1-es';
+import SHA256 from 'sha256-es';
+import SHA512 from 'sha512-es';
 export class BaseWorker {
     constructor(options) {
         this.refreshRate = options.refreshRate;

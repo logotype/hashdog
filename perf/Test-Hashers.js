@@ -1,10 +1,15 @@
 import MD5 from 'md5-es';
-import {SHA1} from './../build/SHA1';
-import {SHA256} from './../build/SHA256';
-import {SHA512} from './../build/SHA512';
-import {Util} from './../build/Util';
+import SHA1 from 'sha1-es';
+import SHA256 from 'sha256-es';
+import SHA512 from 'sha512-es';
 
-Util.cls();
+const numberWithCommas = (x) => {
+    const parts = x.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
+};
+
+process.stdout.write('\u001B[2J\u001B[0;0f');
 console.log('Running performance tests...');
 
 let i, length = 1000000,
@@ -24,7 +29,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 MD5Rate = rate;
-console.log('   MD5 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec');
+console.log('   MD5 rate: ' + numberWithCommas(rate.toFixed()) + ' hashes/sec');
 
 i = 0;
 startDate = new Date();
@@ -34,7 +39,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('  SHA1 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -40.06 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('  SHA1 rate: ' + numberWithCommas(rate.toFixed()) + ' hashes/sec -40.06 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();
@@ -44,7 +49,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('SHA256 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -67.09 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('SHA256 rate: ' + numberWithCommas(rate.toFixed()) + ' hashes/sec -67.09 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();
@@ -54,7 +59,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('SHA512 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec -94.41 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
+console.log('SHA512 rate: ' + numberWithCommas(rate.toFixed()) + ' hashes/sec -94.41 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than MD5)');
 
 i = 0;
 startDate = new Date();
@@ -64,7 +69,7 @@ for (i; i < length; i++) {
 dateDiff = new Date() - startDate;
 rate = (length / dateDiff) * 1000;
 relativeRate = rate / MD5Rate * 100 - 100;
-console.log('   MD5 rate: ' + Util.numberWithCommas(rate.toFixed()) + ' hashes/sec 0.00 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than first run)');
+console.log('   MD5 rate: ' + numberWithCommas(rate.toFixed()) + ' hashes/sec 0.00 (' + Math.abs(relativeRate).toFixed(2) + '% ' + ((relativeRate >= 0) ? 'faster' : 'slower') + ' than first run)');
 
 
 console.log('Performance tests ran successfully.');
