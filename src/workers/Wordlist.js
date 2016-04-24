@@ -6,7 +6,7 @@
  * Released under the MIT license
  */
 import {BaseWorker} from './BaseWorker';
-import {MD5} from './../hash/MD5';
+import MD5 from 'md5-es';
 
 export class Wordlist extends BaseWorker {
     constructor(options) {

@@ -1,4 +1,4 @@
-import {MD5} from './../build/MD5';
+import MD5 from 'md5-es';
 import {SHA1} from './../build/SHA1';
 import {SHA256} from './../build/SHA256';
 import {SHA512} from './../build/SHA512';

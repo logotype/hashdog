@@ -5,7 +5,7 @@
  * Copyright 2016 Victor Norgren
  * Released under the MIT license
  */
-import {MD5} from './../hash/MD5';
+import MD5 from 'md5-es';
 import {SHA1} from './../hash/SHA1';
 import {SHA256} from './../hash/SHA256';
 import {SHA512} from './../hash/SHA512';
