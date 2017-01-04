@@ -1,6 +1,6 @@
 {
   "name": "hashdog",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Break MD5/SHA1/SHA256/SHA512 hashes using wordlists, password lists and string permutations",
   "repository": {
     "type": "git",
@@ -21,21 +21,20 @@
     "tar": "^2.2.1"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
-    "babel-eslint": "^6.0.4",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
-    "eslint": "^2.10.2",
-    "eslint-plugin-babel": "^3.2.0",
+    "eslint": "^3.12.2",
+    "eslint-plugin-babel": "^4.0.0",
     "json-loader": "^0.5.4",
-    "mocha": "^2.4.5",
+    "mocha": "^3.2.0",
     "rimraf": "^2.5.2",
     "webpack": "^1.13.0",
-    "yargs": "^4.7.1"
+    "yargs": "^6.6.0"
   },
   "keywords": [
     "MD5",

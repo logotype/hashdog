@@ -2,7 +2,7 @@
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
- * Copyright 2016 Victor Norgren
+ * Copyright 2017 Victor Norgren
  * Released under the MIT license
  */
 import {Permutator} from './workers/Permutator';
@@ -221,7 +221,7 @@ export class HashDog extends EventEmitter {
             }
         });
 
-        console.log('hashdog by @logotype. Copyright © 2016. Released under the MIT license.');
+        console.log('hashdog by @logotype. Copyright © 2017. Released under the MIT license.');
         console.log(`Hash: ${colors.yellow(this.match)} type: ${colors.magenta(this.type)} characters: ${colors.cyan(this.chars)}`);
         console.log(`Current rate combined..: ${totalRate.toFixed(2)} kHash/s`);
         console.log('');

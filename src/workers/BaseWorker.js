@@ -2,7 +2,7 @@
  * hashdog
  * https://github.com/logotype/hashdog.git
  *
- * Copyright 2016 Victor Norgren
+ * Copyright 2017 Victor Norgren
  * Released under the MIT license
  */
 import MD5 from 'md5-es';
