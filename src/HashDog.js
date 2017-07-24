@@ -149,14 +149,15 @@ export class HashDog extends EventEmitter {
                             this.sendEvents(data);
                         }
                         break;
-                    case 'DONE':
-                        this.deleteWorker(data.workerId);
-                        this.permutator.currentMaxLength++;
-                        const task = new Task({
-                            type: 'PERMUTATOR',
-                            length: this.permutator.currentMaxLength
-                        });
-                        this.addWorker(task);
+                    case 'DONE': {
+                            this.deleteWorker(data.workerId);
+                            this.permutator.currentMaxLength++;
+                            const task = new Task({
+                                type: 'PERMUTATOR',
+                                length: this.permutator.currentMaxLength
+                            });
+                            this.addWorker(task);
+                        }
                         break;
                     default:
                         break;
@@ -200,7 +201,6 @@ export class HashDog extends EventEmitter {
         let dateDiff = currentDate - this.lastDate,
             didSucceed = false,
             secret = '',
-            i = 1,
             totalRate = 0;
 
         this.status.set(data.workerId, data);
@@ -238,7 +238,6 @@ export class HashDog extends EventEmitter {
                 console.log(`  Rate.................: ${statusData.rate.toFixed(2)} kHash/s}`);
                 console.log(`  String...............: ${colors.cyan(statusData.string)}`);
             }
-            i++;
         });
 
         if (didSucceed) {

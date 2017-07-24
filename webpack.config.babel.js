@@ -1,4 +1,6 @@
-import webpack from 'webpack'; // eslint-disable-line no-unused-vars
+import path from 'path';
+
+import webpack from 'webpack';
 import yargs from 'yargs';
 
 const { optimizeMinimize } = yargs.alias('p', 'optimize-minimize').argv;
@@ -10,14 +12,14 @@ export default {
     },
     target: 'node',
     output: {
-        path: './build',
+        path: path.join(__dirname, 'build'),
         filename: '[name].js',
         library: 'HashDog',
         libraryTarget: 'umd'
     },
     module: {
         loaders: [
-            { test: /\.js$/, loader: 'babel', exclude: /node_modules/ }
+            { test: /\.js$/, loader: 'babel-loader' }
         ]
     },
     externals: [],

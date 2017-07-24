@@ -8,7 +8,7 @@ Written in ES6/ES2015, and runs multiple forked processes for better performance
 CLI
 ---
 
-Install hashdog globally, `npm install hashdog -g`.
+Install hashdog globally, `sudo npm install hashdog -g`. Root permissions needed to extract a data archive (used by the dictionary worker).
 
 Run `Hashdog` in your terminal (run with no arguments for help screen):
 

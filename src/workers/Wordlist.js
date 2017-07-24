@@ -22,7 +22,7 @@ export class Wordlist extends BaseWorker {
     initialize(options) {
 
         let i = 0,
-            wordArray = require('json!../../data/wordlist-english.json').data,
+            wordArray = require('json-loader!../../data/wordlist-english.json').data,
             currentString = '',
             currentStringLeet = '',
             hash = '',

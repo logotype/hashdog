@@ -1,42 +1,37 @@
 import HashDog from './../src/HashDog';
-const assert = require('assert');
 
 describe('HashDog', () => {
     describe('#constructor', () => {
         let hashdog = null; // eslint-disable-line no-unused-vars
-        after((done) => {
+        afterEach((done) => {
             hashdog = null;
             done();
         });
-        it('should throw an error when missing options', (done) => {
-            assert.throws(() => {
+        it('should throw an error when missing options', () => {
+            expect(() => {
                 hashdog = new HashDog();
-            }, Error);
-            done();
+            }).toThrowError('Missing options!');
         });
-        it('should throw an error when passing incomplete options', (done) => {
-            assert.throws(() => {
+        it('should throw an error when passing incomplete options', () => {
+            expect(() => {
                 hashdog = new HashDog({});
-            }, Error);
-            done();
+            }).toThrowError('Missing options!');
         });
-        it('should throw an error when passing incorrect hash', (done) => {
-            assert.throws(() => {
+        it('should throw an error when passing incorrect hash', () => {
+            expect(() => {
                 hashdog = new HashDog({
                     hash: 'incorrect',
                     type: 'SHA1'
                 });
-            }, Error);
-            done();
+            }).toThrowError('Invalid SHA1 hash!');
         });
-        it('should throw an error when passing incorrect type', (done) => {
-            assert.throws(() => {
+        it('should throw an error when passing incorrect type', () => {
+            expect(() => {
                 hashdog = new HashDog({
                     hash: '6d86ca3c74636711371637c2d73ec3e48dd1737a',
                     type: 'incorrect'
                 });
-            }, Error);
-            done();
+            }).toThrowError('Unsupported hash type');
         });
     });
 });
