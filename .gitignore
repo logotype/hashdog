@@ -1,7 +1,0 @@
-node_modules/
-.idea/
-*.iml
-src/tmp/
-build/tmp/
-perfbuild/
-data/data.bin
